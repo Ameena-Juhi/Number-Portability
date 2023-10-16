@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CAF } from '../CAF';
 import { MNPSPService } from '../mnpsp.service';
 import { PortingService } from '../port-in.service';
+import { messageDTO } from '../messageDTO';
 
 @Component({
   selector: 'app-mnpsp',
@@ -11,7 +12,7 @@ import { PortingService } from '../port-in.service';
 export class MNPSPComponent {
 
   caf : CAF[] =[];
-  response?: string;
+  response : messageDTO | any; 
 
   constructor(private mnpspService : MNPSPService,
     private portinService : PortingService){}
@@ -22,12 +23,12 @@ export class MNPSPComponent {
   
   getValidation(form: CAF): void {
     this.mnpspService.Validate(form.mobileNumber).subscribe(
-      (response: string) => {
+      (response) => {
         this.response = response;
       },
       (error) => {
         console.error('Error:', error);
-        this.response = 'An error occurred while validating the mobile number.';
+        this.response ={message : 'An error occurred while validating the mobile number.'} ;
       }
     );
   }
