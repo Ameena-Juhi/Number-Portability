@@ -1,5 +1,7 @@
 package com.example.RecipientOperator.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,4 +13,8 @@ public interface CustomerAcquisitionFormRepository extends JpaRepository<Custome
 
     @Query(value = "SELECT * FROM customer_acquisition_form ORDER BY requested_time DESC LIMIT 1", nativeQuery = true)
     CustomerAcquisitionForm findLatestForm();
+
+    Optional<CustomerAcquisitionForm> findById(Long id);
+
+    Optional<CustomerAcquisitionForm> findByMobileNumber(String mobNum);
 }

@@ -1,0 +1,47 @@
+/* Center the content vertically and horizontally */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Adjust this to set the desired height */
+  }
+  
+  /* Style the form elements */
+  .form-group {
+    margin: 10px 0;
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Style the response message */
+  p {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #007BFF;
+  }
+  
