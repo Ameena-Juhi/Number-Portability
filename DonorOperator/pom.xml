@@ -56,6 +56,11 @@
             <groupId>org.springframework.cloud</groupId> 
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId> 
         </dependency> 
+		<dependency>
+    		<groupId>com.h2database</groupId>
+    		<artifactId>h2</artifactId>
+    		<version>2.2.224</version> <!-- Use the appropriate version -->
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement> 
@@ -94,6 +99,30 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.sonarsource.scanner.maven</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>3.10.0.2594</version>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+            	<artifactId>jacoco-maven-plugin</artifactId>
+            	<version>0.8.7</version> <!-- Use the latest version available -->
+            <executions>
+                <execution>
+					<id>prepare-agent</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>report</id>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
+            </executions>
 			</plugin>
 		</plugins>
 	</build>
