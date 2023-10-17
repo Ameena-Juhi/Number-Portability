@@ -30,7 +30,7 @@ public class DonorController {
         return mobileNumberService.retrieveMobileNumber(sms);
     }
 
-    @GetMapping("/request/{mobileNumber}")
+    @PostMapping("/request/{mobileNumber}")
     public boolean respondToPortingRequest(@PathVariable("mobileNumber") String mobileNumber,@RequestParam("upc") String upc) throws Exception{
         return (portingVerificationService.checkActivationPeriod(mobileNumber) && 
         portingVerificationService.checkOutstandingPayments(mobileNumber) &&

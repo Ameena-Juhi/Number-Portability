@@ -1,6 +1,5 @@
 package com.example.DonorOperator.service;
 
-import java.time.Instant;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class PortingVerificationService {
     public NumbersPorting getPortingRequest(String mobNum) throws Exception{
         if(mobileNumberRepository.findByMobileNumber(mobNum) != null){
             Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).getId();
-            return(numbersPortingRepository.findBymobileNumberIdNumbersPorting(mobileNum_id));
+            return(numbersPortingRepository.findByMobileNumberId(mobileNum_id));
         }
         throw new Exception(mobNum + "is not found in DB");
     }
