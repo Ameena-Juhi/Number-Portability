@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.DonorOperator.entity.NumbersPorting;
 import com.example.DonorOperator.entity.SubscriberDetails;
+import com.example.DonorOperator.exception.ResourceNotFoundException;
 import com.example.DonorOperator.repository.MobileNumberRepository;
 import com.example.DonorOperator.repository.NumbersPortingRepository;
 import com.example.DonorOperator.repository.SubscriberDetailsRepository;
@@ -23,28 +24,28 @@ public class PortingVerificationService {
     @Autowired
     private SubscriberDetailsRepository subscriberDetailsRepository;
 
-    public NumbersPorting getPortingRequest(String mobNum) throws Exception{
+    public NumbersPorting getPortingRequest(String mobNum) throws ResourceNotFoundException{
         if(mobileNumberRepository.findByMobileNumber(mobNum) != null){
             Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).getId();
             return(numbersPortingRepository.findByMobileNumberId(mobileNum_id));
         }
-        throw new Exception(mobNum + "is not found in DB");
+        throw new ResourceNotFoundException(mobNum + "is not found in DB");
     }
 
-    public SubscriberDetails getSubscriberDetails(String mobNum) throws Exception{
+    public SubscriberDetails getSubscriberDetails(String mobNum) throws ResourceNotFoundException{
         if(mobileNumberRepository.findByMobileNumber(mobNum) != null){
             Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).getId();
             return(subscriberDetailsRepository.findbymobilenum_id(mobileNum_id));
         }
-        throw new Exception(mobNum + "is not found in DB");
+        throw new ResourceNotFoundException(mobNum + "is not found in DB");
     }
 
-    public boolean checkOutstandingPayments(String mobNum) throws Exception {
+    public boolean checkOutstandingPayments(String mobNum) throws ResourceNotFoundException {
             SubscriberDetails subscriber = this.getSubscriberDetails(mobNum);
             return !subscriber.isBilling_clearance();
     }
 
-    public boolean checkActivationPeriod(String mobNum) throws Exception {
+    public boolean checkActivationPeriod(String mobNum) throws ResourceNotFoundException {
         // Check if 90 days in this context assuming 9 minutes have elapsed from the activation date.
             SubscriberDetails subscriber = this.getSubscriberDetails(mobNum);
             Date activationDate = subscriber.getPortedInDate();
@@ -53,7 +54,7 @@ public class PortingVerificationService {
             return timedifference>=9;
     }
 
-    public boolean checkUPCMismatch(String mobNum, String upc) throws Exception {
+    public boolean checkUPCMismatch(String mobNum, String upc) throws ResourceNotFoundException {
     // Implement logic to check if UPC in the request matches the one associated with the mobile number.
 
         NumbersPorting portingRequest = this.getPortingRequest(mobNum);
@@ -61,11 +62,11 @@ public class PortingVerificationService {
         return upc.equals(storedUPC);
     }
 
-    public boolean checkChangeOfOwnership(String mobNum) throws Exception {
+    public boolean checkChangeOfOwnership(String mobNum) throws ResourceNotFoundException{
         return(this.getPortingRequest(mobNum)!=null);
     }
 
-    public boolean checkUPCValidity(String mobNum, String upc) throws Exception {
+    public boolean checkUPCValidity(String mobNum, String upc) throws ResourceNotFoundException {
             NumbersPorting portingRequest = this.getPortingRequest(mobNum);
             Date upcGenDate = portingRequest.getRequestedUpcTime();
             Date currentdate = new Date();

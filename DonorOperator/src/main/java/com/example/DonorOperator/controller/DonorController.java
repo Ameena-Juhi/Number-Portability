@@ -31,7 +31,7 @@ public class DonorController {
     }
 
     @PostMapping("/request/{mobileNumber}")
-    public boolean respondToPortingRequest(@PathVariable("mobileNumber") String mobileNumber,@RequestParam("upc") String upc) throws Exception{
+    public boolean respondToPortingRequest(@PathVariable("mobileNumber") String mobileNumber,@RequestParam("upc") String upc) throws ResourceNotFoundException{
         return (portingVerificationService.checkActivationPeriod(mobileNumber) && 
         portingVerificationService.checkOutstandingPayments(mobileNumber) &&
         portingVerificationService.checkUPCMismatch(mobileNumber,upc) &&

@@ -3,6 +3,10 @@ spring:
     url: 'jdbc:mysql://localhost:3306/RecipientOperator'
     username: Ameena
     password: Ameena
+  application:
+    name: RecipientOperator
+server:
+  port: 8082
   jpa:
     properties:
       hibernate:
@@ -10,4 +14,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+eureka:
+  client:
+    service-url:
+      defaultZone : http://localhost:8761/eureka/
 
