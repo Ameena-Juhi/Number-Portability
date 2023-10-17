@@ -7,5 +7,7 @@ import com.example.DonorOperator.entity.NumbersPorting;
 
 @Repository
 public interface NumbersPortingRepository extends JpaRepository<NumbersPorting,Long> {
+
+    NumbersPorting findBymobileNumberIdNumbersPorting(Long mobileNum_id);
     
 }

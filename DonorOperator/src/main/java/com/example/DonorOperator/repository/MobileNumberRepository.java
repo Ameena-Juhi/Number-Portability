@@ -9,4 +9,5 @@ import com.example.DonorOperator.entity.MobileNumber;
 public interface MobileNumberRepository extends JpaRepository<MobileNumber,Long>{
     
     MobileNumber findByMobileNumber(String number);
+
 }

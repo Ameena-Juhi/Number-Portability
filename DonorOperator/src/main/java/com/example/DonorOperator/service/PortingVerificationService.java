@@ -1,59 +1,105 @@
 package com.example.DonorOperator.service;
 
+import java.time.Instant;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.DonorOperator.entity.NumbersPorting;
+import com.example.DonorOperator.entity.SubscriberDetails;
+import com.example.DonorOperator.repository.MobileNumberRepository;
+import com.example.DonorOperator.repository.NumbersPortingRepository;
+import com.example.DonorOperator.repository.SubscriberDetailsRepository;
+
+@Service
 public class PortingVerificationService {
 
-    public boolean checkOutstandingPayments(SubscriberDetails subscriber) {
-        // Check if outstanding payments are due for the issued bill.
-        return !subscriber.isBilling_clearance();
+    @Autowired
+    private NumbersPortingRepository numbersPortingRepository;
+
+    @Autowired
+    private MobileNumberRepository mobileNumberRepository;
+
+    @Autowired
+    private SubscriberDetailsRepository subscriberDetailsRepository;
+
+    public NumbersPorting getPortingRequest(String mobNum) throws Exception{
+        if(mobileNumberRepository.findByMobileNumber(mobNum) != null){
+            Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).getId();
+            return(numbersPortingRepository.findBymobileNumberIdNumbersPorting(mobileNum_id));
+        }
+        throw new Exception(mobNum + "is not found in DB");
     }
 
-    public boolean checkActivationPeriod(SubscriberDetails subscriber) {
-        // Check if 90 days have elapsed from the activation date.
-        Date activationDate = subscriber.getPortedInDate();
-        Instant ninetyDaysAgo = Instant.now().minusSeconds(90 * 24 * 60 * 60); // 90 days in seconds
-        return activationDate.toInstant().isBefore(ninetyDaysAgo);
+    public SubscriberDetails getSubscriberDetails(String mobNum) throws Exception{
+        if(mobileNumberRepository.findByMobileNumber(mobNum) != null){
+            Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).getId();
+            return(subscriberDetailsRepository.findbymobilenum_id(mobileNum_id));
+        }
+        throw new Exception(mobNum + "is not found in DB");
     }
 
-    public boolean checkChangeOfOwnership(SubscriberDetails subscriber) {
-        // Implement logic to check if change of ownership is in process.
-        // Return true if change of ownership is not in process.
-        // You need to define how this information is stored in your system.
-        return /* your logic here */;
+    public boolean checkOutstandingPayments(String mobNum) throws Exception {
+            SubscriberDetails subscriber = this.getSubscriberDetails(mobNum);
+            return !subscriber.isBilling_clearance();
     }
 
-    public boolean checkSubJudice(SubscriberDetails subscriber) {
-        // Implement logic to check if the mobile number is sub-judice.
-        // Return true if it's not sub-judice.
-        return /* your logic here */;
+    public boolean checkActivationPeriod(String mobNum) throws Exception {
+        // Check if 90 days in this context assuming 9 minutes have elapsed from the activation date.
+            SubscriberDetails subscriber = this.getSubscriberDetails(mobNum);
+            Date activationDate = subscriber.getPortedInDate();
+            Date currentdate = new Date();
+            Long timedifference = (currentdate.getTime() - activationDate.getTime())/(60*1000);
+            return timedifference>=9;
     }
 
-    public boolean checkProhibitedByCourt(SubscriberDetails subscriber) {
-        // Implement logic to check if the number is prohibited by a court of law.
-        // Return true if it's not prohibited.
-        return /* your logic here */;
+    public boolean checkUPCMismatch(String mobNum, String upc) throws Exception {
+    // Implement logic to check if UPC in the request matches the one associated with the mobile number.
+
+        NumbersPorting portingRequest = this.getPortingRequest(mobNum);
+        String storedUPC = portingRequest.getUpc();
+        return upc.equals(storedUPC);
     }
 
-    public boolean checkUPCMismatch(NumbersPorting portingRequest) {
-        // Implement logic to check if UPC mismatch.
-        // Return true if UPC matches.
-        return /* your logic here */;
+    public boolean checkChangeOfOwnership(String mobNum) throws Exception {
+        return(this.getPortingRequest(mobNum)!=null);
     }
 
-    public boolean checkContractualObligation(SubscriberDetails subscriber) {
-        // Implement logic to check if contractual obligations are cleared.
-        // Return true if obligations are cleared.
-        return /* your logic here */;
+    public boolean checkUPCValidity(String mobNum, String upc) throws Exception {
+            NumbersPorting portingRequest = this.getPortingRequest(mobNum);
+            Date upcGenDate = portingRequest.getRequestedUpcTime();
+            Date currentdate = new Date();
+            Long timedifference = (currentdate.getTime() - upcGenDate.getTime())/(60*1000);
+            return timedifference<=4; //4 days ago equivalent 4 mins(asssumption) 
     }
 
-    public boolean checkAuthorizationLetter(NumbersPorting portingRequest) {
-        // Implement logic to check if an authorization letter is provided for corporate numbers.
-        // Return true if an authorization letter is provided.
-        return /* your logic here */;
-    }
+    
 
-    public boolean checkUPCValidity(NumbersPorting portingRequest) {
-        // Implement logic to check if UPC validity has not expired.
-        // Return true if UPC is valid.
-        return /* your logic here */;
-    }
+    // public boolean checkSubJudice(SubscriberDetails subscriber) {
+    //     // Implement logic to check if the mobile number is sub-judice.
+    //     // Return true if it's not sub-judice.
+    //     return /* your logic here */;
+    // }
+
+    // public boolean checkProhibitedByCourt(SubscriberDetails subscriber) {
+    //     // Implement logic to check if the number is prohibited by a court of law.
+    //     // Return true if it's not prohibited.
+    //     return /* your logic here */;
+    // }
+
+
+    // public boolean checkContractualObligation(SubscriberDetails subscriber) {
+    //     // Implement logic to check if contractual obligations are cleared.
+    //     // Return true if obligations are cleared.
+    //     return /* your logic here */;
+    // }
+
+    // public boolean checkAuthorizationLetter(NumbersPorting portingRequest) {
+    //     // Implement logic to check if an authorization letter is provided for corporate numbers.
+    //     // Return true if an authorization letter is provided.
+    //     return /* your logic here */;
+    // }
+
+    
 }

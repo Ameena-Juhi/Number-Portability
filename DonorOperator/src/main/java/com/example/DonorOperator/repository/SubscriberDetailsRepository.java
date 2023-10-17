@@ -7,5 +7,5 @@ import com.example.DonorOperator.entity.SubscriberDetails;
 
 @Repository
 public interface SubscriberDetailsRepository extends JpaRepository<SubscriberDetails, Long>{
-    
+    SubscriberDetails findbymobilenum_id(Long mobileNum_id);
 }
