@@ -2,13 +2,13 @@ package com.example.DonorOperator.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.DonorOperator.DTO.CAFdto;
+import com.example.DonorOperator.FeignClient.ClearanceClient;
 import com.example.DonorOperator.exception.ResourceNotFoundException;
 import com.example.DonorOperator.service.MobileNumberService;
 import com.example.DonorOperator.service.PortingVerificationService;
@@ -24,19 +24,26 @@ public class DonorController {
     @Autowired
     private PortingVerificationService portingVerificationService;
 
+    @Autowired
+    private ClearanceClient clearanceClient;
+
     @PostMapping("/port")
-    public String portingSMS(@RequestBody String sms) throws ResourceNotFoundException{
+    public String portingSMS(@RequestBody String sms) throws ResourceNotFoundException {
         return mobileNumberService.retrieveMobileNumber(sms);
     }
 
-    @PostMapping("/request/{mobileNumber}")
-    public boolean respondToPortingRequest(@PathVariable("mobileNumber") String mobileNumber,@RequestParam("upc") String upc) throws ResourceNotFoundException{
-        return (portingVerificationService.checkActivationPeriod(mobileNumber) && 
-        portingVerificationService.checkOutstandingPayments(mobileNumber) &&
-        portingVerificationService.checkUPCMismatch(mobileNumber,upc) &&
-        portingVerificationService.checkUPCValidity(mobileNumber,upc) &&
-        portingVerificationService.checkChangeOfOwnership(mobileNumber));
+    @PostMapping("/forwardcaf")
+    public boolean respondToPortingRequest(@RequestBody CAFdto form) throws ResourceNotFoundException {
+
+        boolean clearance = (portingVerificationService.checkActivationPeriod(form.getMobileNumber()) &&
+                portingVerificationService.checkOutstandingPayments(form.getMobileNumber()) &&
+                portingVerificationService.checkUPCMismatch(form) &&
+                portingVerificationService.checkUPCValidity(form.getMobileNumber()) &&
+                portingVerificationService.checkChangeOfOwnership(form.getMobileNumber()));
+
+        // this.clearanceClient.schedulePortTime(clearance);
+
+        return clearance;
     }
 
-    
 }

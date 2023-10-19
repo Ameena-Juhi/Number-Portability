@@ -1,4 +1,4 @@
-package com.example.RecipientOperator.entity;
+package com.example.MNPSP.entity;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import lombok.Data;
 @Entity
 @Data
 public class NumberPortabilityDB {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,6 +25,6 @@ public class NumberPortabilityDB {
 
     @Column(columnDefinition = "boolean default false")
     private boolean ported;
-    
+
     private Date portedAt;
 }

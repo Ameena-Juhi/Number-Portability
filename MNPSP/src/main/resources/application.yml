@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/recipientoperator
+    url: jdbc:mysql://localhost:3306/mnpsp
     username: AmeenaJuhi
     password: AmeenaJuhi
   application:
-    name: RecipientOperator
+    name: MNPSP
 server:
-  port: 8082
+  port: 8083
   jpa:
     properties:
       hibernate:

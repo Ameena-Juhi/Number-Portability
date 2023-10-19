@@ -1,5 +1,6 @@
 package com.example.DonorOperator.service;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,22 +34,26 @@ public class MobileNumberService {
 
         if (!mobileNumber.isEmpty()) {
             MobileNumber existingMobileNumber = mobileNumberRepository.findByMobileNumber(mobileNumber);
-
+            if (numbersPortingRepository.findByMobileNumberId(existingMobileNumber.getId()) != null) {
+                return ("Already generated UPC for this number!");
+            }
             if (existingMobileNumber != null) {
 
                 NumbersPorting numsPorting = new NumbersPorting();
                 numsPorting.setMobileNumber(existingMobileNumber);
                 String uniquePortingCode = generateUniquePortingCode();
                 numsPorting.setUpc(uniquePortingCode);
+                numsPorting.setRequestedUpcTime(new Date());
                 numbersPortingRepository.save(numsPorting);
                 return uniquePortingCode;
-                
-            } else {
-                
-                throw new ResourceNotFoundException(mobileNumber + " does not exist in the Database");
             }
+            // } else {
+
+            // throw new ResourceNotFoundException(mobileNumber + " does not exist in the
+            // Database");
+            // }
         }
-        
+
         return "No valid mobile number found in the SMS.";
     }
 
