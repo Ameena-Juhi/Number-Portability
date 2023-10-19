@@ -34,7 +34,18 @@ public class MobileNumberService {
 
         if (!mobileNumber.isEmpty()) {
             MobileNumber existingMobileNumber = mobileNumberRepository.findByMobileNumber(mobileNumber);
-            if (numbersPortingRepository.findByMobileNumberId(existingMobileNumber.getId()) != null) {
+            NumbersPorting portingNumber = numbersPortingRepository.findByMobileNumberId(existingMobileNumber.getId());
+            if (portingNumber != null) {
+                Date upcGenDate = portingNumber.getRequestedUpcTime();
+                Date currentdate = new Date();
+                Long timedifference = (currentdate.getTime() - upcGenDate.getTime()) / (60 * 1000);
+                if (timedifference >= 40) {
+                    String upc = generateUniquePortingCode();
+                    portingNumber.setUpc(upc);
+                    portingNumber.setRequestedUpcTime(new Date());
+                    numbersPortingRepository.save(portingNumber);
+                    return upc;
+                }
                 return ("Already generated UPC for this number!");
             }
             if (existingMobileNumber != null) {
