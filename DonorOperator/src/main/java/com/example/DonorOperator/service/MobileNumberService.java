@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.DonorOperator.entity.MobileNumber;
@@ -23,8 +24,8 @@ public class MobileNumberService {
     @Autowired
     private NumbersPortingRepository numbersPortingRepository;
 
-    public String retrieveMobileNumber(String SMS) {
-        
+    public String retrieveMobileNumber(String SMS) throws ResourceNotFoundException {
+
         Pattern pattern = Pattern.compile("\\d{10}");
         Matcher matcher = pattern.matcher(SMS);
         String mobileNumber = "";
@@ -35,6 +36,9 @@ public class MobileNumberService {
 
         if (!mobileNumber.isEmpty()) {
             MobileNumber existingMobileNumber = mobileNumberRepository.findByMobileNumber(mobileNumber);
+            if (existingMobileNumber == null) {
+                throw new ResourceNotFoundException(mobileNumber);
+            }
             NumbersPorting portingNumber = numbersPortingRepository.findByMobileNumberId(existingMobileNumber.getId());
             if (portingNumber != null) {
                 Date upcGenDate = portingNumber.getRequestedUpcTime();
@@ -53,15 +57,14 @@ public class MobileNumberService {
 
                 return createNewPorting(existingMobileNumber);
             }
-            
+
         }
 
         return "No valid mobile number found in the SMS.";
     }
 
-   
     private String generateUniquePortingCode() {
-        
+
         int min = 10000000;
         int max = 99999999;
 
@@ -70,14 +73,13 @@ public class MobileNumberService {
         return String.format("%08d", randomNumber);
     }
 
-    public String createNewPorting(MobileNumber existingMobileNumber){
+    public String createNewPorting(MobileNumber existingMobileNumber) {
         NumbersPorting numsPorting = new NumbersPorting();
-                numsPorting.setMobileNumber(existingMobileNumber);
-                String uniquePortingCode = generateUniquePortingCode();
-                numsPorting.setUpc(uniquePortingCode);
-                numsPorting.setRequestedUpcTime(new Date());
-                numbersPortingRepository.save(numsPorting);
-                return uniquePortingCode;
+        numsPorting.setMobileNumber(existingMobileNumber);
+        String uniquePortingCode = generateUniquePortingCode();
+        numsPorting.setUpc(uniquePortingCode);
+        numsPorting.setRequestedUpcTime(new Date());
+        numbersPortingRepository.save(numsPorting);
+        return uniquePortingCode;
     }
-}   
-
+}

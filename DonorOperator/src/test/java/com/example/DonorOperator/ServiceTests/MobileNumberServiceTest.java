@@ -22,8 +22,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class MobileNumberServiceTest {
 
     @InjectMocks
@@ -45,7 +47,7 @@ public class MobileNumberServiceTest {
         String sms = "PORT 9014315818";
 
         // Create a sample MobileNumber entity
-        
+
         MobileNumber mobileNumber = new MobileNumber();
         mobileNumber.setId((long) 1);
         mobileNumber.setMobileNumber("9014315818");
@@ -60,6 +62,4 @@ public class MobileNumberServiceTest {
         assertTrue(Pattern.matches("^\\d{8}$", upc));
     }
 
-    
 }
-
