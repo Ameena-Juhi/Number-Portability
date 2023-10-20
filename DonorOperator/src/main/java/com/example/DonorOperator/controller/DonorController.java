@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,15 +15,21 @@ import com.example.DonorOperator.DTO.ActivationRequestDTO;
 import com.example.DonorOperator.DTO.CAFdto;
 import com.example.DonorOperator.DTO.MessageDTO;
 import com.example.DonorOperator.FeignClient.ClearanceClient;
+import com.example.DonorOperator.entity.MobileNumber;
 import com.example.DonorOperator.exception.ResourceNotFoundException;
+import com.example.DonorOperator.repository.MobileNumberRepository;
 import com.example.DonorOperator.service.DeactivationService;
 import com.example.DonorOperator.service.MobileNumberService;
 import com.example.DonorOperator.service.PortingVerificationService;
 
-@CrossOrigin
+// @CrossOrigin
 @RestController
+@CrossOrigin(origins = "localhost:4200")
 @RequestMapping("/operator")
 public class DonorController {
+
+    @Autowired
+    private MobileNumberRepository mobileNumberRepository;
 
     @Autowired
     private MobileNumberService mobileNumberService;
@@ -33,6 +40,11 @@ public class DonorController {
     @Autowired
     private DeactivationService deactivationService;
 
+    @GetMapping("/get")
+    public List<MobileNumber> getMobNums(){
+        return mobileNumberRepository.findAll();
+    } 
+    
     @PostMapping("/port")
     public String portingSMS(@RequestBody String sms) throws ResourceNotFoundException {
         return mobileNumberService.retrieveMobileNumber(sms);

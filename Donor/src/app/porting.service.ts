@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,6 +10,9 @@ export class PortingService {
   constructor(private http : HttpClient) { }
 
   getUpc(sms : string) : Observable<string>{
-    return this.http.post<string>("http://localhost:8080/operator/port",sms);
+
+    return this.http.post<string>("http://localhost:8081/operator/port",sms);
   }
+
+  
 }

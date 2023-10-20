@@ -11,6 +11,6 @@ export class MNPSPService {
   constructor(private http : HttpClient) { }
 
   Validate(mobileNumber : string) : Observable<messageDTO>{
-    return this.http.get<messageDTO>(`http://localhost:8080/mnpsp/validate/${mobileNumber}`);
+    return this.http.get<messageDTO>(`http://localhost:8083/mnpsp/validate/${mobileNumber}`);
   }
 }
