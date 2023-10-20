@@ -16,14 +16,15 @@ import com.example.DonorOperator.repository.NumbersPortingRepository;
 
 @Service
 public class MobileNumberService {
-
+    Random random = new Random();
     @Autowired
     private MobileNumberRepository mobileNumberRepository;
 
     @Autowired
     private NumbersPortingRepository numbersPortingRepository;
 
-    public String retrieveMobileNumber(String SMS) throws ResourceNotFoundException {
+    public String retrieveMobileNumber(String SMS) {
+        
         Pattern pattern = Pattern.compile("\\d{10}");
         Matcher matcher = pattern.matcher(SMS);
         String mobileNumber = "";
@@ -50,26 +51,17 @@ public class MobileNumberService {
             }
             if (existingMobileNumber != null) {
 
-                NumbersPorting numsPorting = new NumbersPorting();
-                numsPorting.setMobileNumber(existingMobileNumber);
-                String uniquePortingCode = generateUniquePortingCode();
-                numsPorting.setUpc(uniquePortingCode);
-                numsPorting.setRequestedUpcTime(new Date());
-                numbersPortingRepository.save(numsPorting);
-                return uniquePortingCode;
+                return createNewPorting(existingMobileNumber);
             }
-            // } else {
-
-            // throw new ResourceNotFoundException(mobileNumber + " does not exist in the
-            // Database");
-            // }
+            
         }
 
         return "No valid mobile number found in the SMS.";
     }
 
+   
     private String generateUniquePortingCode() {
-        Random random = new Random();
+        
         int min = 10000000;
         int max = 99999999;
 
@@ -77,4 +69,15 @@ public class MobileNumberService {
 
         return String.format("%08d", randomNumber);
     }
-}
+
+    public String createNewPorting(MobileNumber existingMobileNumber){
+        NumbersPorting numsPorting = new NumbersPorting();
+                numsPorting.setMobileNumber(existingMobileNumber);
+                String uniquePortingCode = generateUniquePortingCode();
+                numsPorting.setUpc(uniquePortingCode);
+                numsPorting.setRequestedUpcTime(new Date());
+                numbersPortingRepository.save(numsPorting);
+                return uniquePortingCode;
+    }
+}   
+

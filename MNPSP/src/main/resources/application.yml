@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/mnpsp
-    username: AmeenaJuhi
-    password: AmeenaJuhi
+    url: jdbc:mysql://localhost:3306/MNPSP
+    username: Ameena
+    password: Ameena
   application:
     name: MNPSP
 server:

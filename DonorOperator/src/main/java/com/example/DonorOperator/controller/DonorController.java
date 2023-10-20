@@ -72,19 +72,6 @@ public class DonorController {
         return true;
     }
 
-    // boolean clearance =
-    // (portingVerificationService.checkActivationPeriod(form.getMobileNumber()) &&
-    // portingVerificationService.checkOutstandingPayments(form.getMobileNumber())
-    // &&
-    // portingVerificationService.checkUPCMismatch(form) &&
-    // portingVerificationService.checkUPCValidity(form.getMobileNumber()) &&
-    // portingVerificationService.checkChangeOfOwnership(form.getMobileNumber()));
-
-    // // this.clearanceClient.schedulePortTime(clearance);
-
-    // return clearance;
-    // }
-
     @PostMapping("/deactivation")
     public MessageDTO deactivateMobileNumber(@RequestBody ActivationRequestDTO deactivationRequest) {
         return deactivationService.acceptDeactivation(deactivationRequest);
