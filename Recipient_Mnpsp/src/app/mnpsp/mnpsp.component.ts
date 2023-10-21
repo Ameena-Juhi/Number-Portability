@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { CAF } from '../CAF';
 import { MNPSPService } from '../mnpsp.service';
 import { PortingService } from '../port-in.service';
 import { messageDTO } from '../messageDTO';
+import { CafDTO } from '../CafDTO';
 
 @Component({
   selector: 'app-mnpsp',
@@ -12,7 +12,7 @@ import { messageDTO } from '../messageDTO';
 
 export class MNPSPComponent {
 
-  caf : CAF[] =[];
+  caf : CafDTO[] =[];
   response: messageDTO = { message: '' }; 
 
   constructor(private mnpspService : MNPSPService,
@@ -22,8 +22,8 @@ export class MNPSPComponent {
     this.portinService.getAllRquests().subscribe(res => this.caf = res);
   }
   
-  getValidation(form: CAF): void {
-    this.mnpspService.Validate(form.mobileNumber).subscribe(
+  getValidation(form: CafDTO): void {
+    this.mnpspService.Validate(form).subscribe(
       (response : messageDTO) => {
         this.response = response;
       },
@@ -33,6 +33,8 @@ export class MNPSPComponent {
       }
     );
   }
+
+  
   
 
 }

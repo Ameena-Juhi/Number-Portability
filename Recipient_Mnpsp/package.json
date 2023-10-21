@@ -1,5 +1,5 @@
 {
-  "name": "recipient",
+  "name": "recipient-mnpsp",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.7",
-    "@angular/cli": "~16.2.2",
+    "@angular/cli": "^16.2.7",
     "@angular/compiler-cli": "^16.2.0",
     "@types/jasmine": "~4.3.0",
     "jasmine-core": "~4.6.0",

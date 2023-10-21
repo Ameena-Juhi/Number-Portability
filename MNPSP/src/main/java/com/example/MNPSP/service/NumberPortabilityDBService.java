@@ -1,10 +1,14 @@
 package com.example.MNPSP.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.MNPSP.DTO.CAFdto;
 import com.example.MNPSP.DTO.MessageDTO;
+import com.example.MNPSP.DTO.PortingStatusDTO;
 import com.example.MNPSP.entity.NumberPortabilityDB;
 import com.example.MNPSP.repository.NumberPortabilityDBRepository;
 
@@ -18,7 +22,7 @@ public class NumberPortabilityDBService {
 
     public MessageDTO checkNPDB(CAFdto form) {
         NumberPortabilityDB numDB = numDBRepository.findByPortingNumber(form.getMobileNumber());
-        
+
         if (numDB == null) {
             // If the record does not exist, create a new one.
             NumberPortabilityDB newNumDB = new NumberPortabilityDB();
@@ -34,7 +38,7 @@ public class NumberPortabilityDBService {
             }
         }
     }
-    
+
     private MessageDTO createResponse(String message) {
         MessageDTO messageDTO = new MessageDTO();
         messageDTO.setMessage(message);
@@ -51,5 +55,18 @@ public class NumberPortabilityDBService {
             numDBRepository.save(numDB);
             return createResponse("Request Accepted");
         }
+    }
+
+    public List<PortingStatusDTO> allStatus() {
+        List<NumberPortabilityDB> numbersPorting = numDBRepository.findAll();
+        List<PortingStatusDTO> portingStatusDTOs = new ArrayList<>();
+        for (NumberPortabilityDB number : numbersPorting) {
+            PortingStatusDTO portingStatusDTO = new PortingStatusDTO();
+            portingStatusDTO.setMobileNumber(number.getPortingNumber());
+            portingStatusDTO.setPending(number.isPending());
+            portingStatusDTO.setPorted(number.isPorted());
+            portingStatusDTOs.add(portingStatusDTO);
+        }
+        return portingStatusDTOs;
     }
 }

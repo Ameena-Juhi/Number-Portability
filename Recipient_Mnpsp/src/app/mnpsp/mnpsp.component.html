@@ -1,0 +1,23 @@
+<h1>Port-in Requests</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Mobile Number</th>
+            <th>Unique Porting Code(UPC)</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let form of caf">
+            <td>{{form.mobileNumber}}</td>
+            <td>{{form.upc}}</td>
+            <td>
+                <button type="button" (click)="getValidation(form)">Forward to MNPSP</button>
+                <button>Cancel the request</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="response">
+    <p>Response: {{ response.message }}</p>
+  </div>

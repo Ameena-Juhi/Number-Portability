@@ -22,9 +22,8 @@ import com.example.DonorOperator.service.DeactivationService;
 import com.example.DonorOperator.service.MobileNumberService;
 import com.example.DonorOperator.service.PortingVerificationService;
 
-// @CrossOrigin
 @RestController
-@CrossOrigin(origins = "localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200/")
 @RequestMapping("/operator")
 public class DonorController {
 
@@ -41,10 +40,10 @@ public class DonorController {
     private DeactivationService deactivationService;
 
     @GetMapping("/get")
-    public List<MobileNumber> getMobNums(){
+    public List<MobileNumber> getMobNums() {
         return mobileNumberRepository.findAll();
-    } 
-    
+    }
+
     @PostMapping("/port")
     public String portingSMS(@RequestBody String sms) throws ResourceNotFoundException {
         return mobileNumberService.retrieveMobileNumber(sms);

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { PortingService } from '../porting.service';
+import { CafDTO } from '../cafDTO';
+import { RequestDTO } from '../RequestDTO';
+import { MsgDTO } from '../MsgDTO';
 
 @Component({
   selector: 'app-porting',
@@ -24,5 +27,30 @@ export class PortingComponent {
     else {
       this.response = 'No SMS entered.';
     }
+  }
+
+
+  forwardCAF(cafDTO:CafDTO){
+      this.portingService.getCAF(cafDTO).subscribe(
+        (result) => {
+          if (result) {
+            console.log('CAF forwarded successfully.');
+          } else {
+            console.error('Error forwarding CAF.');
+          }
+        }
+      )
+    }
+  
+
+  deactivation(request:RequestDTO){
+    this.portingService.requestDeactivation(request).subscribe(
+      (result: MsgDTO) => {
+        console.log('Deactivation request processed successfully.');
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    )
   }
 }
