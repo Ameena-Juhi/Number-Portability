@@ -30,27 +30,4 @@ export class PortingComponent {
   }
 
 
-  forwardCAF(cafDTO:CafDTO){
-      this.portingService.getCAF(cafDTO).subscribe(
-        (result) => {
-          if (result) {
-            console.log('CAF forwarded successfully.');
-          } else {
-            console.error('Error forwarding CAF.');
-          }
-        }
-      )
-    }
-  
-
-  deactivation(request:RequestDTO){
-    this.portingService.requestDeactivation(request).subscribe(
-      (result: MsgDTO) => {
-        console.log('Deactivation request processed successfully.');
-      },
-      (error) => {
-        console.error('Error:', error);
-      }
-    )
-  }
 }

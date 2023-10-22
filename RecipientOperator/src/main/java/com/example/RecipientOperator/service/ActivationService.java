@@ -1,14 +1,17 @@
 package com.example.RecipientOperator.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.RecipientOperator.DTO.ActivationRequestDTO;
 import com.example.RecipientOperator.DTO.MessageDTO;
+import com.example.RecipientOperator.entity.ActivationRequest;
 import com.example.RecipientOperator.entity.MobileNumber;
 import com.example.RecipientOperator.entity.SubscriberDetails;
+import com.example.RecipientOperator.repository.ActivationReqRepo;
 import com.example.RecipientOperator.repository.MobileNumberRepository;
 import com.example.RecipientOperator.repository.SubDetailsRepository;
 
@@ -20,6 +23,20 @@ public class ActivationService {
 
     @Autowired
     private SubDetailsRepository subDetailsRepository;
+
+    @Autowired
+    private ActivationReqRepo activationReqRepo;
+
+    public void saveActivationReq(ActivationRequestDTO request) {
+        ActivationRequest newRequest = new ActivationRequest();
+        newRequest.setMobileNumber(request.getMobileNumber());
+        newRequest.setActivationTime(request.getActivationTime());
+        activationReqRepo.save(newRequest);
+    }
+
+    public List<ActivationRequest> getAllActivationRequests(){
+        return activationReqRepo.findAll();
+    }
 
     public MessageDTO acceptRequest(ActivationRequestDTO activationRequest) {
         MessageDTO messageDTO = new MessageDTO();

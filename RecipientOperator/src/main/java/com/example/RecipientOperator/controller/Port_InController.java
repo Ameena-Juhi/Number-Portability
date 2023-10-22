@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.RecipientOperator.DTO.ActivationRequestDTO;
 import com.example.RecipientOperator.DTO.MessageDTO;
+import com.example.RecipientOperator.entity.ActivationRequest;
 import com.example.RecipientOperator.entity.CustomerAcquisitionForm;
 import com.example.RecipientOperator.service.ActivationService;
 import com.example.RecipientOperator.service.CustomerAcquisitionFormService;
@@ -27,6 +29,7 @@ public class Port_InController {
     @Autowired
     private ActivationService activationService;
 
+
     @GetMapping("/allrequests")
     public List<CustomerAcquisitionForm> getAllRequests() {
         return CAFService.getAllRequests();
@@ -35,6 +38,16 @@ public class Port_InController {
     @PostMapping("/portin")
     public void processCAF(@RequestBody CustomerAcquisitionForm form) {
         CAFService.saveCustomerForm(form);
+    }
+
+    @PostMapping("/saveRequest")
+    public void saveActivationRequest(@RequestBody ActivationRequestDTO requestDTO){
+        activationService.saveActivationReq(requestDTO);
+    }
+
+    @GetMapping("/activationRequests")
+    public List<ActivationRequest> getAllActivationRequest(){
+        return activationService.getAllActivationRequests();
     }
 
     @PostMapping("/activation")

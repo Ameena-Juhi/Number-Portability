@@ -8,13 +8,17 @@ import { AppComponent } from './app.component';
 import { PortInComponent } from './port-in/port-in.component';
 import { MNPSPComponent } from './mnpsp/mnpsp.component';
 import { StatusCheckComponent } from './status-check/status-check.component';
+import { MnpspValidationComponent } from './mnpsp-validation/mnpsp-validation.component';
+import { ActivationComponent } from './activation/activation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PortInComponent,
     MNPSPComponent,
-    StatusCheckComponent
+    StatusCheckComponent,
+    MnpspValidationComponent,
+    ActivationComponent
     
   ],
   imports: [

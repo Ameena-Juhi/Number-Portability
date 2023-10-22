@@ -11,8 +11,8 @@ import com.example.MNPSP.DTO.MessageDTO;
 @FeignClient(name = "DONOROPERATOR", url = "http://localhost:8081/operator")
 public interface forwardcaf {
 
-    @PostMapping("/forwardcaf")
-    MessageDTO sendCAFToMNPSP(@RequestBody CAFdto Form);
+    @PostMapping("/passedcaf")
+    MessageDTO sendCAFToDonor(@RequestBody CAFdto Form);
 
     @PostMapping("/deactivation")
     public MessageDTO deactivateMobileNumber(@RequestBody ActivationRequestDTO deactivationRequest);

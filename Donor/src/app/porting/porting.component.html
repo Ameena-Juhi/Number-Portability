@@ -1,15 +1,28 @@
+<div>
+  <!-- Add your landing page content here -->
+  <h2>Welcome to our Services</h2>
+  <p>
+    Providing a professional and extensive choice in the Telecom Market space.
+  </p>
+  <!-- Add more content, images, and features as needed -->
+</div>
 <div class="container">
-    <h1>Mobile Number Porting</h1>
-    <form (ngSubmit)="retrieveMobileNumber()">
-      <div class="form-group">
-        <label for="smsInput">Enter SMS:</label>
-        <input type="text" id="smsInput" class="form-control" [(ngModel)]="sms" name="sms">
-      </div>
-      <button type="submit" class="btn btn-primary">SMS 1900</button>
-    </form>
-    <div *ngIf="response">
-      <p>Response: {{ response }}</p>
-      <p>Donot share this UPC code with anyone except your Recipient Operator</p>
+  <h1>Mobile Number Porting</h1>
+  <form (ngSubmit)="retrieveMobileNumber()">
+    <div class="form-group">
+      <label for="smsInput">Enter SMS:</label>
+      <input
+        type="text"
+        id="smsInput"
+        class="form-control"
+        [(ngModel)]="sms"
+        name="sms"
+      />
     </div>
+    <button type="submit" class="btn btn-primary">SMS 1900</button>
+  </form>
+  <div *ngIf="response">
+    <p>Response: {{ response }}</p>
+    <p>Donot share this UPC code with anyone except your Recipient Operator</p>
   </div>
-  
+</div>

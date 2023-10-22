@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { PortingComponent } from './porting/porting.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
-import { PortingNumsComponent } from './porting-nums/porting-nums.component';
+import { ValidateRequestsComponent } from './validate-requests/validate-requests.component';
+import { DeactivationComponent } from './deactivation/deactivation.component';
 @NgModule({
   declarations: [
     AppComponent,
     PortingComponent,
     HomeComponent,
-    PortingNumsComponent
+    ValidateRequestsComponent,
+    DeactivationComponent
   ],
   imports: [
     BrowserModule,

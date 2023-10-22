@@ -1,0 +1,25 @@
+<div class="container">
+  <h2>Activation Requests</h2>
+  <div *ngIf="requests.length > 0; else noRequests">
+    <ul class="request-list">
+      <li *ngFor="let req of requests">
+        <div class="request-item">
+          <p><strong>Mobile Number: </strong>{{ req.mobileNumber }}</p>
+          <p>
+            <strong>Activation Time: </strong
+            >{{ req.activationTime | date : "medium" }}
+          </p>
+          <button (click)="activateNumber(req)" class="activate-btn">
+            Activate
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noRequests>
+    <p>No activation requests found.</p>
+  </ng-template>
+  <div *ngIf="response.message" class="response-message">
+    <p>{{ response.message }}</p>
+  </div>
+</div>

@@ -19,7 +19,7 @@ export class MNPSPComponent {
     private portinService : PortingService){}
 
   ngOnInit(): void {
-    this.portinService.getAllRquests().subscribe(res => this.caf = res);
+    this.portinService.getAllPortingRquests().subscribe(res => this.caf = res);
   }
   
   getValidation(form: CafDTO): void {

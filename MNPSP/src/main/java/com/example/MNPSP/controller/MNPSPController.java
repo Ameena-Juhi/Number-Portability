@@ -14,6 +14,8 @@ import java.util.List;
 import com.example.MNPSP.DTO.CAFdto;
 import com.example.MNPSP.DTO.MessageDTO;
 import com.example.MNPSP.DTO.PortingStatusDTO;
+import com.example.MNPSP.DTO.ValidationClearanceDTO;
+import com.example.MNPSP.feignClient.forwardcaf;
 import com.example.MNPSP.service.NumberPortabilityDBService;
 
 @CrossOrigin
@@ -23,6 +25,9 @@ public class MNPSPController {
 
     @Autowired
     private NumberPortabilityDBService numPortDBService;
+
+    @Autowired
+    private forwardcaf forwardform;
 
     @PostMapping("/sendcaf")
     public MessageDTO validateCAF(@RequestBody CAFdto caf) {
@@ -35,20 +40,19 @@ public class MNPSPController {
         }
     }
 
+    @PostMapping("/processform")
+    public void processForm(@RequestBody CAFdto form) {
+        forwardform.sendCAFToDonor(form);
+    }
+
+    @PostMapping("/storeClearance")
+    public void storeClearance(@RequestBody ValidationClearanceDTO validationClearanceDTO) {
+        numPortDBService.storeDonorClearance(validationClearanceDTO);
+    }
+
     @PostMapping("/scheduleport")
-    public LocalDateTime schedulePortTime(@RequestParam("validationClearance") boolean validationClearance) {
-        if (validationClearance) {
-            // Get the current time
-            LocalDateTime currentTime = LocalDateTime.now();
-
-            // Add 1 minute to the current time
-            LocalDateTime scheduledTime = currentTime.plusMinutes(1);
-
-            // Scheduled time is 1 minute ahead of the current time
-            return scheduledTime;
-        }
-        // Return null if validationClearance is false
-        return null;
+    public LocalDateTime schedulePortTime(@RequestBody MessageDTO mobNum) {
+        return numPortDBService.schedulePortDateTime(mobNum);
     }
 
     @GetMapping("/all")

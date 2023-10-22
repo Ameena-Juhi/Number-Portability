@@ -1,0 +1,28 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .request-list {
+    margin-top: 20px;
+  }
+  
+  .request-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .validate-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  

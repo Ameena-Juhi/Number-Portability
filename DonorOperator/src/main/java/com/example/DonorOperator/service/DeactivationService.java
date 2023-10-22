@@ -1,15 +1,18 @@
 package com.example.DonorOperator.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.DonorOperator.DTO.ActivationRequestDTO;
 import com.example.DonorOperator.DTO.MessageDTO;
+import com.example.DonorOperator.entity.DeactivateRequest;
 import com.example.DonorOperator.entity.MobileNumber;
 import com.example.DonorOperator.entity.NumbersPorting;
 import com.example.DonorOperator.entity.SubscriberDetails;
+import com.example.DonorOperator.repository.DeactivationReqRepo;
 import com.example.DonorOperator.repository.MobileNumberRepository;
 import com.example.DonorOperator.repository.NumbersPortingRepository;
 import com.example.DonorOperator.repository.SubscriberDetailsRepository;
@@ -25,6 +28,13 @@ public class DeactivationService {
 
     @Autowired
     private NumbersPortingRepository numbersPortingRepository;
+
+    @Autowired
+    private DeactivationReqRepo deactivationReqRepo;
+
+    public List<DeactivateRequest> getAllDeactReqs() {
+        return deactivationReqRepo.findAll();
+    }
 
     public MessageDTO acceptDeactivation(ActivationRequestDTO deactivationRequest) {
         MessageDTO messageDTO = new MessageDTO();
@@ -46,5 +56,12 @@ public class DeactivationService {
         }
         return messageDTO;
 
+    }
+
+    public void saveDeactReqs(ActivationRequestDTO activationRequestDTO) {
+        DeactivateRequest request = new DeactivateRequest();
+        request.setMobileNumber(activationRequestDTO.getMobileNumber());
+        request.setActivationTime(activationRequestDTO.getActivationTime());
+        deactivationReqRepo.save(request);
     }
 }

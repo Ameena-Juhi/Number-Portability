@@ -26,5 +26,7 @@ public class NumberPortabilityDB {
     @Column(columnDefinition = "boolean default false")
     private boolean ported;
 
+    private boolean clearance;
+
     private Date portedAt;
 }

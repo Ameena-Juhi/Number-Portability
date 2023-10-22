@@ -1,0 +1,12 @@
+<div class="container">
+  <h2>List of Requests</h2>
+  <div class="request-list">
+    <div *ngFor="let item of forms" class="request-item">
+      <p>Mobile Number: {{ item.mobileNumber }}</p>
+      <p>UPC: {{ item.upc }}</p>
+      <button (click)="validateRequest(this.item)" class="validate-button">
+        Validate
+      </button>
+    </div>
+  </div>
+</div>

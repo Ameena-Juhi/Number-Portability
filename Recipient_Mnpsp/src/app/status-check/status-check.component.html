@@ -1,1 +1,20 @@
-<p>status-check works!</p>
+<div class="status-container">
+  <h2>Status of Porting Mobile Numbers</h2>
+  <div *ngIf="statusDtos.length">
+    <table class="status-table">
+      <tr>
+        <th>Mobile Number</th>
+        <th>Pending</th>
+        <th>Ported</th>
+      </tr>
+      <tr *ngFor="let status of statusDtos">
+        <td>{{ status.mobileNumber }}</td>
+        <td>{{ status.pending ? "Yes" : "No" }}</td>
+        <td>{{ status.ported ? "Yes" : "No" }}</td>
+      </tr>
+    </table>
+  </div>
+  <div *ngIf="!statusDtos.length">
+    <p>No status available at the moment.</p>
+  </div>
+</div>

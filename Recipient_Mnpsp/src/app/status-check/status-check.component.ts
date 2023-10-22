@@ -1,7 +1,9 @@
 import { Component,OnInit } from '@angular/core';
 import { status } from '../status';
 import { MNPSPService } from '../mnpsp.service';
-import { PortingService } from '../port-in.service';
+import { CafDTO } from '../CafDTO';
+import { Observable } from 'rxjs';
+import { messageDTO } from '../messageDTO';
 
 @Component({
   selector: 'app-status-check',
@@ -12,8 +14,7 @@ export class StatusCheckComponent implements OnInit {
   statusDtos: status[] = [];
 
   constructor(
-    private mnpspService: MNPSPService,
-    private portinService: PortingService
+    private mnpspService: MNPSPService
   ) {}
 
   ngOnInit(): void {
@@ -26,6 +27,8 @@ export class StatusCheckComponent implements OnInit {
       }
     );
   }
+
+
 }
 
 

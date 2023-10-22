@@ -1,5 +1,6 @@
 package com.example.MNPSP.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.MNPSP.DTO.CAFdto;
 import com.example.MNPSP.DTO.MessageDTO;
 import com.example.MNPSP.DTO.PortingStatusDTO;
+import com.example.MNPSP.DTO.ValidationClearanceDTO;
 import com.example.MNPSP.entity.NumberPortabilityDB;
 import com.example.MNPSP.repository.NumberPortabilityDBRepository;
 
@@ -69,4 +71,31 @@ public class NumberPortabilityDBService {
         }
         return portingStatusDTOs;
     }
+
+    public void storeDonorClearance(ValidationClearanceDTO validationClearanceDTO){
+        NumberPortabilityDB numberPortabilityDB = numDBRepository.findByPortingNumber(validationClearanceDTO.getMobileNumber());
+        if(numberPortabilityDB!=null){
+            numberPortabilityDB.setClearance(validationClearanceDTO.isValidationClearance());
+            numDBRepository.save(numberPortabilityDB);
+        }
+        return;
+    }
+
+    public LocalDateTime schedulePortDateTime(MessageDTO mobNum){
+        NumberPortabilityDB numberPortabilityDB = numDBRepository.findByPortingNumber(mobNum.getMessage());
+        boolean clearance = numberPortabilityDB.isClearance();
+            if (clearance) {
+                // Get the current time
+                LocalDateTime currentTime = LocalDateTime.now();
+    
+                // Add 1 minute to the current time
+                LocalDateTime scheduledTime = currentTime.plusMinutes(1);
+    
+                // Scheduled time is 1 minute ahead of the current time
+                return scheduledTime;
+            }
+            // Return null if validationClearance is false
+            return null;
+        }
+    
 }
