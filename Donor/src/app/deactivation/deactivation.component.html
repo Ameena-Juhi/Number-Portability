@@ -1,19 +1,27 @@
 <div class="container">
-    <h2>Deactivation Requests</h2>
-    <ul class="request-list" *ngIf="requests.length > 0; else noRequests">
-      <li *ngFor="let req of requests">
-        <div class="request-item">
-          <p><strong>Mobile Number: </strong>{{ req.mobileNumber }}</p>
-          <p><strong>Activation Time: </strong>{{ req.activationTime | date:'medium' }}</p>
-          <button (click)="deactivateSubscriber(req)" class="deactivate-btn">Deactivate</button>
-        </div>
-      </li>
-    </ul>
-    <ng-template #noRequests>
-      <p>No deactivation requests found.</p>
-    </ng-template>
-    <div *ngIf="response.message" class="response-message">
-      <p>{{ response.message }}</p>
-    </div>
+  <h2>Deactivation Requests</h2>
+  <ul class="request-list" *ngIf="requests.length > 0; else noRequests">
+    <li *ngFor="let req of requests">
+      <div class="request-item">
+        <p><strong>Mobile Number: </strong>{{ req.mobileNumber }}</p>
+        <p>
+          <strong>Activation Time: </strong
+          >{{ req.activationTime | date : "medium" }}
+        </p>
+        <button
+          [ngClass]="{ 'disabled-button': isButtonDisabled }"
+          (click)="deactivateSubscriber(req)"
+          class="deactivate-btn"
+        >
+          Deactivate
+        </button>
+      </div>
+    </li>
+  </ul>
+  <ng-template #noRequests>
+    <p>No deactivation requests found.</p>
+  </ng-template>
+  <div *ngIf="response.message" class="response-message">
+    <p>{{ response.message }}</p>
   </div>
-  
+</div>

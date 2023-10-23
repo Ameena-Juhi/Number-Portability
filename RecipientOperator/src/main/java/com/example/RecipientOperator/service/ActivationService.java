@@ -1,6 +1,7 @@
 package com.example.RecipientOperator.service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.example.RecipientOperator.DTO.ActivationRequestDTO;
 import com.example.RecipientOperator.DTO.MessageDTO;
+import com.example.RecipientOperator.DTO.ValidationClearanceDTO;
 import com.example.RecipientOperator.entity.ActivationRequest;
+import com.example.RecipientOperator.entity.CustomerAcquisitionForm;
 import com.example.RecipientOperator.entity.MobileNumber;
 import com.example.RecipientOperator.entity.SubscriberDetails;
+import com.example.RecipientOperator.feignClient.CAFClient;
 import com.example.RecipientOperator.repository.ActivationReqRepo;
+import com.example.RecipientOperator.repository.CustomerAcquisitionFormRepository;
 import com.example.RecipientOperator.repository.MobileNumberRepository;
 import com.example.RecipientOperator.repository.SubDetailsRepository;
 
@@ -22,10 +27,16 @@ public class ActivationService {
     private MobileNumberRepository mobileNumberRepository;
 
     @Autowired
+    private CustomerAcquisitionFormRepository customerAcquisitionFormRepository;
+
+    @Autowired
     private SubDetailsRepository subDetailsRepository;
 
     @Autowired
     private ActivationReqRepo activationReqRepo;
+
+    @Autowired
+    private CAFClient cafClient;
 
     public void saveActivationReq(ActivationRequestDTO request) {
         ActivationRequest newRequest = new ActivationRequest();
@@ -34,7 +45,7 @@ public class ActivationService {
         activationReqRepo.save(newRequest);
     }
 
-    public List<ActivationRequest> getAllActivationRequests(){
+    public List<ActivationRequest> getAllActivationRequests() {
         return activationReqRepo.findAll();
     }
 
@@ -45,13 +56,25 @@ public class ActivationService {
         // Check if the current date and time are the same as the activation time
         LocalDateTime activationTime = activationRequest.getActivationTime();
         if (currentDateTime.isAfter(activationTime)) {
-            MobileNumber mobileNumber = new MobileNumber();
-            mobileNumber.setMobileNumber(activationRequest.getMobileNumber());
-            mobileNumberRepository.save(mobileNumber);
-            SubscriberDetails subscriberDetails = new SubscriberDetails();
-            subscriberDetails.setMobileNumber(mobileNumber);
-            subDetailsRepository.save(subscriberDetails);
-            messageDTO.setMessage("Mobile number added successfully."); // Set the appropriate success message
+            if (mobileNumberRepository.findByMobileNumber(activationRequest.getMobileNumber()).get() != null) {
+                messageDTO.setMessage("Already Added successfully!");
+            } else {
+                CustomerAcquisitionForm customerDetails = (customerAcquisitionFormRepository.findByMobileNumber(activationRequest.getMobileNumber())).get();
+                MobileNumber mobileNumber = new MobileNumber();
+                mobileNumber.setMobileNumber(activationRequest.getMobileNumber());
+                mobileNumberRepository.save(mobileNumber);
+                SubscriberDetails subscriberDetails = new SubscriberDetails();
+                subscriberDetails.setMobileNumber(mobileNumber);
+                subscriberDetails.setPortedInDate(new Date());
+                subscriberDetails.setName(customerDetails.getName());
+                subscriberDetails.setAddress(customerDetails.getAddress());
+                subDetailsRepository.save(subscriberDetails);
+                ValidationClearanceDTO clearanceDto = new ValidationClearanceDTO();
+                clearanceDto.setMobileNumber(activationRequest.getMobileNumber());
+                clearanceDto.setValidationClearance(true);
+                this.cafClient.setActivationClearance(clearanceDto);
+                messageDTO.setMessage("Mobile number added successfully.");
+            }
         } else {
             messageDTO.setMessage("Activation Time not yet reached!");
         }

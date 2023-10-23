@@ -16,10 +16,7 @@ public class CustomerAcquisitionFormService {
     private CustomerAcquisitionFormRepository CAFRepository;
 
     public void saveCustomerForm(CustomerAcquisitionForm form) {
-        // Trim the mobile number to 10 characters
-        // if (form.getMobileNumber() != null && form.getMobileNumber().length() > 10) {
-        //     form.setMobileNumber(form.getMobileNumber().substring(0, 10));
-        // }
+        
         form.setRequestedTime(new Date());
         CAFRepository.save(form);
     }

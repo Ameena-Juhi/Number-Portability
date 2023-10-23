@@ -18,7 +18,12 @@
     padding: 15px;
     margin-bottom: 10px;
   }
+
+  .disabled-button {
+    background-color: grey; 
+  }
   
+
   .deactivate-btn {
     background-color: #f44336;
     border: none;

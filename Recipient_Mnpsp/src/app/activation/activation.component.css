@@ -18,6 +18,10 @@
     padding: 15px;
     margin-bottom: 10px;
   }
+
+  .disabled-button {
+    background-color: grey; 
+  }
   
   .activate-btn {
     background-color: #4CAF50;

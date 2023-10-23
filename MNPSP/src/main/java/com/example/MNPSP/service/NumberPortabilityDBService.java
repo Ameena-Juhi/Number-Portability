@@ -2,6 +2,7 @@ package com.example.MNPSP.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import com.example.MNPSP.DTO.CAFdto;
 import com.example.MNPSP.DTO.MessageDTO;
 import com.example.MNPSP.DTO.PortingStatusDTO;
 import com.example.MNPSP.DTO.ValidationClearanceDTO;
+import com.example.MNPSP.entity.FinalClearance;
 import com.example.MNPSP.entity.NumberPortabilityDB;
+import com.example.MNPSP.repository.FinalClearanceRepo;
 import com.example.MNPSP.repository.NumberPortabilityDBRepository;
 
 @Service
@@ -19,6 +22,9 @@ public class NumberPortabilityDBService {
 
     @Autowired
     private NumberPortabilityDBRepository numDBRepository;
+
+    @Autowired
+    private FinalClearanceRepo finalClearanceRepo;
 
     private static final long TIME_THRESHOLD = 4 * 60 * 1000; // 4 minutes
 
@@ -96,6 +102,18 @@ public class NumberPortabilityDBService {
             }
             // Return null if validationClearance is false
             return null;
+        }
+
+        public void updatePortabilityDB(MessageDTO portingNumber) {
+            String mobNum = portingNumber.getMessage();
+            NumberPortabilityDB portabilityDB = numDBRepository.findByPortingNumber(mobNum);
+            FinalClearance finalClearance = finalClearanceRepo.findByMobileNumClearance(mobNum);
+            if (finalClearance.isActivationClearance() && finalClearance.isDeactivationClearance()) {
+                portabilityDB.setPending(false);
+                portabilityDB.setPorted(true);
+                portabilityDB.setPortedAt(new Date());
+                numDBRepository.save(portabilityDB);
+            }
         }
     
 }

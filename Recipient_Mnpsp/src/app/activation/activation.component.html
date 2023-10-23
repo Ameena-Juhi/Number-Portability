@@ -9,7 +9,7 @@
             <strong>Activation Time: </strong
             >{{ req.activationTime | date : "medium" }}
           </p>
-          <button (click)="activateNumber(req)" class="activate-btn">
+          <button [ngClass]="{ 'disabled-button': isButtonDisabled }" (click)="activateNumber(req)" class="activate-btn">
             Activate
           </button>
         </div>

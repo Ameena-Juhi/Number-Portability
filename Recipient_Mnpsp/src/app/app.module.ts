@@ -10,6 +10,7 @@ import { MNPSPComponent } from './mnpsp/mnpsp.component';
 import { StatusCheckComponent } from './status-check/status-check.component';
 import { MnpspValidationComponent } from './mnpsp-validation/mnpsp-validation.component';
 import { ActivationComponent } from './activation/activation.component';
+import { SubscribersComponent } from './subscribers/subscribers.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ActivationComponent } from './activation/activation.component';
     MNPSPComponent,
     StatusCheckComponent,
     MnpspValidationComponent,
-    ActivationComponent
+    ActivationComponent,
+    SubscribersComponent
     
   ],
   imports: [

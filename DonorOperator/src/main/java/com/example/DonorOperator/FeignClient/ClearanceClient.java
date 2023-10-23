@@ -13,4 +13,7 @@ public interface ClearanceClient {
 
     @PostMapping("/storeClearance")
     void storeClearance(@RequestBody ValidationClearanceDTO validationClearance);
+
+    @PostMapping("/deactivationClearance")
+    void setDeactivationClearance(@RequestBody ValidationClearanceDTO deactivationClearance);
 }

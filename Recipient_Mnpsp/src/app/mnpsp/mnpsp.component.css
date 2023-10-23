@@ -1,0 +1,46 @@
+.portal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.portal-table th, .portal-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.portal-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.portal-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.portal-table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.action-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+}
+
+.forward-button {
+    background-color: #007BFF;
+    color: #fff;
+}
+
+.cancel-button {
+    background-color: #FF3D3D;
+    color: #fff;
+}
+
+.action-button:hover {
+    opacity: 0.8;
+}

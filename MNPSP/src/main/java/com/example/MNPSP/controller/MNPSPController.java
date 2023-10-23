@@ -16,6 +16,7 @@ import com.example.MNPSP.DTO.MessageDTO;
 import com.example.MNPSP.DTO.PortingStatusDTO;
 import com.example.MNPSP.DTO.ValidationClearanceDTO;
 import com.example.MNPSP.feignClient.forwardcaf;
+import com.example.MNPSP.service.FinalClearanceService;
 import com.example.MNPSP.service.NumberPortabilityDBService;
 
 @CrossOrigin
@@ -28,6 +29,9 @@ public class MNPSPController {
 
     @Autowired
     private forwardcaf forwardform;
+
+    @Autowired
+    private FinalClearanceService finalClearanceService;
 
     @PostMapping("/sendcaf")
     public MessageDTO validateCAF(@RequestBody CAFdto caf) {
@@ -58,6 +62,21 @@ public class MNPSPController {
     @GetMapping("/all")
     public List<PortingStatusDTO> getallStatus() {
         return numPortDBService.allStatus();
+    }
+
+    @PostMapping("/deactivationClearance")
+    public void setDeactivationClearance(@RequestBody ValidationClearanceDTO deactivationClearance){
+        finalClearanceService.setDonorClearance(deactivationClearance);
+    }
+
+    @PostMapping("/activationClearance")
+    public void setActivationClearance(@RequestBody ValidationClearanceDTO activationClearance){
+        finalClearanceService.setRecipientClearance(activationClearance);
+    }
+
+    @PostMapping("/updateNumDb")
+    public void updateNumDB(@RequestBody MessageDTO MobileNumber){
+        numPortDBService.updatePortabilityDB(MobileNumber);
     }
 
 }

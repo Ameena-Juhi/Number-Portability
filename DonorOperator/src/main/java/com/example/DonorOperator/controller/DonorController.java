@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.DonorOperator.DTO.ActivationRequestDTO;
 import com.example.DonorOperator.DTO.CAFdto;
 import com.example.DonorOperator.DTO.MessageDTO;
+import com.example.DonorOperator.DTO.SubDetailsDTO;
 import com.example.DonorOperator.DTO.ValidationClearanceDTO;
 import com.example.DonorOperator.FeignClient.ClearanceClient;
 import com.example.DonorOperator.entity.DeactivateRequest;
@@ -25,9 +26,10 @@ import com.example.DonorOperator.service.DeactivationService;
 import com.example.DonorOperator.service.ForwardedReqService;
 import com.example.DonorOperator.service.MobileNumberService;
 import com.example.DonorOperator.service.PortingVerificationService;
+import com.example.DonorOperator.service.SubscriberDetailsService;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:49866", "http://localhost:4200"})
+@CrossOrigin(origins = {"http://localhost:57109/", "http://localhost:4200"})
 @RequestMapping("/operator")
 public class DonorController {
 
@@ -48,6 +50,9 @@ public class DonorController {
 
     @Autowired
     private DeactivationService deactivationService;
+
+    @Autowired
+    private SubscriberDetailsService subscriberDetailsService;
 
     @GetMapping("/get")
     public List<MobileNumber> getMobNums() {
@@ -124,6 +129,11 @@ public class DonorController {
     @PostMapping("/deactivation")
     public MessageDTO deactivateMobileNumber(@RequestBody ActivationRequestDTO deactivationRequest) {
         return deactivationService.acceptDeactivation(deactivationRequest);
+    }
+
+    @GetMapping("/getSubscribers")
+    public List<SubDetailsDTO> getAllSubDetails(){
+        return subscriberDetailsService.getAllDetails();
     }
 
 }

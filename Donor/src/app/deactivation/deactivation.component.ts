@@ -15,6 +15,7 @@ export class DeactivationComponent implements OnInit {
     mobileNumber:'',
     activationTime: new Date('2024-01-01')
   };
+  isButtonDisabled: boolean = false;
   response: MsgDTO = { message : '' };
 
   constructor(private portingService: PortingService) {}
@@ -43,5 +44,6 @@ export class DeactivationComponent implements OnInit {
         this.response = { message : 'An error occurred.' };
       }
     );
+    this.isButtonDisabled = true;
   }
 }

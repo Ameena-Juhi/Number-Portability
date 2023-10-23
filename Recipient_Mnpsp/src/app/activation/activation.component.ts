@@ -14,6 +14,7 @@ export class ActivationComponent {
   requests : RequestDTO[] = [];
   request : RequestDTO = { mobileNumber:'',activationTime:new Date('2024-01-01')};
   response: messageDTO = {message:''};
+  isButtonDisabled: boolean = false;
 
   constructor(
     private portinService:PortingService
@@ -43,5 +44,6 @@ export class ActivationComponent {
         this.response ={message : 'An error occurred .'} ;
       }
     )
+    this.isButtonDisabled = true;
   }
 }

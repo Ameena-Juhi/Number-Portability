@@ -28,6 +28,11 @@ public class CustomerAcquisitionForm {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date requestedTime;
 
+    @Column
+    private String name;
+    private String address;
+    
 
-    //Also DonorOperator
+
+    //Also DonorOperator.
 }

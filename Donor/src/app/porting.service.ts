@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { RequestDTO } from './RequestDTO';
 import { MsgDTO } from './MsgDTO';
 import { CafDTO } from './cafDTO';
+import { SubDetailsDto } from './SubDetailsDto';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,10 @@ export class PortingService {
 
   requestDeactivation(request : RequestDTO): Observable<MsgDTO>{
     return this.http.post<MsgDTO>("http://localhost:8081/operator/deactivation",request);
+  }
+
+  getSubscribers():Observable<SubDetailsDto[]>{
+    return this.http.get<SubDetailsDto[]>("http://localhost:8081/operator/getSubscribers");
   }
   
 }

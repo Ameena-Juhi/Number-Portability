@@ -26,6 +26,18 @@ export class MNPSPService {
   }
 
   processToDonor(form: CafDTO):Observable<void>{
-    return this.http.post<void>("http://localhost:8083/mnpsp/processform",form)
+    return this.http.post<void>("http://localhost:8083/mnpsp/processform",form);
+  }
+
+  getDonorClearance(clearance:validationClearancedto):Observable<void>{
+    return this.http.post<void>("http://localhost:8083/mnpsp/deactivationClearance",clearance);
+  }
+
+  getRecipientClearance(clearance:validationClearancedto):Observable<void>{
+    return this.http.post<void>("http://localhost:8083/mnpsp/activationClearance",clearance);
+  }
+
+  updateNumDB(mobileNumber: messageDTO):Observable<void>{
+    return this.http.post<void>("http://localhost:8083/mnpsp/updateNumDb",mobileNumber);
   }
 }

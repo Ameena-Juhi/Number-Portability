@@ -1,0 +1,24 @@
+<h1>Subscribers List</h1>
+
+<div *ngIf="subscribers.length > 0; else noSubscribers">
+  <table class="subscribers-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Mobile Number</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let subscriber of subscribers">
+        <td>{{ subscriber.name }}</td>
+        <td>{{ subscriber.address }}</td>
+        <td>{{ subscriber.mobileNumber }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noSubscribers>
+  <p>No subscribers found.</p>
+</ng-template>

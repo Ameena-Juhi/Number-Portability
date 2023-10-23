@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.DonorOperator.DTO.ActivationRequestDTO;
 import com.example.DonorOperator.DTO.MessageDTO;
+import com.example.DonorOperator.DTO.ValidationClearanceDTO;
+import com.example.DonorOperator.FeignClient.ClearanceClient;
 import com.example.DonorOperator.entity.DeactivateRequest;
 import com.example.DonorOperator.entity.MobileNumber;
 import com.example.DonorOperator.entity.NumbersPorting;
@@ -30,6 +32,9 @@ public class DeactivationService {
     private NumbersPortingRepository numbersPortingRepository;
 
     @Autowired
+    private ClearanceClient clearanceClient;
+
+    @Autowired
     private DeactivationReqRepo deactivationReqRepo;
 
     public List<DeactivateRequest> getAllDeactReqs() {
@@ -40,16 +45,19 @@ public class DeactivationService {
         MessageDTO messageDTO = new MessageDTO();
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDateTime scheduledTime = deactivationRequest.getActivationTime();
-        // Check if the current date and time are the same as the activation time
 
         if (currentDateTime.isAfter(scheduledTime)) {
             MobileNumber mobileEntry = mobileNumberRepository.findByMobileNumber(deactivationRequest.getMobileNumber());
             SubscriberDetails subscriberDetails = subscriberDetailsRepository.findbymobilenum_id(mobileEntry.getId());
             NumbersPorting numbersPortingEntry = numbersPortingRepository.findByMobileNumberId(mobileEntry.getId());
+            ValidationClearanceDTO clearance = new ValidationClearanceDTO();
+            clearance.setMobileNumber(mobileEntry.getMobileNumber());
+            clearance.setValidationClearance(true);
             subscriberDetailsRepository.delete(subscriberDetails);
             numbersPortingRepository.delete(numbersPortingEntry);
             mobileNumberRepository.delete(mobileEntry);
-
+            
+            this.clearanceClient.setDeactivationClearance(clearance);
             messageDTO.setMessage("Mobile number deleted successfully."); // Set the appropriate success message
         } else {
             messageDTO.setMessage("Deactivation Time not yet reached!/Already deactivated your account");

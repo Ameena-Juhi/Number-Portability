@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { RequestDTO } from './RequestDTO';
 import { messageDTO } from './messageDTO';
 import { CafDTO } from './CafDTO';
+import { CAF } from './CAF';
+import { SubDetailsDto } from './SubDetailsDto';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,7 @@ export class PortingService {
 
   constructor(private http : HttpClient) { }
 
-  getUpc(Caf : CafDTO) : Observable<void>{
+  getUpc(Caf : CAF) : Observable<void>{
     return this.http.post<void>("http://localhost:8082/request/portin",Caf);
   }
 
@@ -30,6 +32,10 @@ export class PortingService {
 
   getRequestActivation(request: RequestDTO): Observable<messageDTO>{
     return this.http.post<messageDTO>("http://localhost:8082/request/activation",request);
+  }
+
+  getSubDetails():Observable<SubDetailsDto[]>{
+    return this.http.get<SubDetailsDto[]>("http://localhost:8082/request/getSubscribers");
   }
 
 }

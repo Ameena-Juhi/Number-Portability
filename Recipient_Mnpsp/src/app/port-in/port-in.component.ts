@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PortingService } from '../port-in.service';
-import { CafDTO } from '../CafDTO';
+import { CAF } from '../CAF';
 
 @Component({
   selector: 'app-port-in',
@@ -9,7 +9,9 @@ import { CafDTO } from '../CafDTO';
 })
 export class PortInComponent {
 
-  form : CafDTO = {
+  form : CAF = {
+    name:'',
+    address:'',
     mobileNumber: '',
     upc: ''
   };
