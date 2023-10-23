@@ -16,6 +16,7 @@ import com.example.MNPSP.DTO.MessageDTO;
 import com.example.MNPSP.DTO.PortingStatusDTO;
 import com.example.MNPSP.DTO.ValidationClearanceDTO;
 import com.example.MNPSP.feignClient.forwardcaf;
+import com.example.MNPSP.service.CancelRequestService;
 import com.example.MNPSP.service.FinalClearanceService;
 import com.example.MNPSP.service.NumberPortabilityDBService;
 
@@ -32,6 +33,9 @@ public class MNPSPController {
 
     @Autowired
     private FinalClearanceService finalClearanceService;
+
+    @Autowired
+    private CancelRequestService cancelRequestService;
 
     @PostMapping("/sendcaf")
     public MessageDTO validateCAF(@RequestBody CAFdto caf) {
@@ -76,7 +80,13 @@ public class MNPSPController {
 
     @PostMapping("/updateNumDb")
     public void updateNumDB(@RequestBody MessageDTO MobileNumber){
+        System.out.println("i am called");
         numPortDBService.updatePortabilityDB(MobileNumber);
+    }
+
+    @PostMapping
+    private MessageDTO cancelRequest(@RequestBody MessageDTO mobileNumber){
+        return cancelRequestService.processCancellation(mobileNumber);
     }
 
 }

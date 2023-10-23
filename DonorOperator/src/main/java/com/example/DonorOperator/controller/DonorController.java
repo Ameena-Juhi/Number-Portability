@@ -17,11 +17,12 @@ import com.example.DonorOperator.DTO.MessageDTO;
 import com.example.DonorOperator.DTO.SubDetailsDTO;
 import com.example.DonorOperator.DTO.ValidationClearanceDTO;
 import com.example.DonorOperator.FeignClient.ClearanceClient;
-import com.example.DonorOperator.entity.DeactivateRequest;
+import com.example.DonorOperator.entity.DeactivationRequest;
 import com.example.DonorOperator.entity.ForwardedRequests;
 import com.example.DonorOperator.entity.MobileNumber;
 import com.example.DonorOperator.exception.ResourceNotFoundException;
 import com.example.DonorOperator.repository.MobileNumberRepository;
+import com.example.DonorOperator.service.CancelRequestService;
 import com.example.DonorOperator.service.DeactivationService;
 import com.example.DonorOperator.service.ForwardedReqService;
 import com.example.DonorOperator.service.MobileNumberService;
@@ -29,7 +30,7 @@ import com.example.DonorOperator.service.PortingVerificationService;
 import com.example.DonorOperator.service.SubscriberDetailsService;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:57109/", "http://localhost:4200"})
+@CrossOrigin(origins = { "http://localhost:53840/", "http://localhost:4200" })
 @RequestMapping("/operator")
 public class DonorController {
 
@@ -54,13 +55,16 @@ public class DonorController {
     @Autowired
     private SubscriberDetailsService subscriberDetailsService;
 
+    @Autowired
+    private CancelRequestService cancelRequestService;
+
     @GetMapping("/get")
     public List<MobileNumber> getMobNums() {
         return mobileNumberRepository.findAll();
     }
 
     @PostMapping("/port")
-    public String portingSMS(@RequestBody String sms) throws ResourceNotFoundException {
+    public MessageDTO portingSMS(@RequestBody MessageDTO sms) throws ResourceNotFoundException {
         return mobileNumberService.retrieveMobileNumber(sms);
     }
 
@@ -117,12 +121,12 @@ public class DonorController {
     }
 
     @GetMapping("/allDeactReqs")
-    public List<DeactivateRequest> getAllDeactReqs() {
+    public List<DeactivationRequest> getAllDeactReqs() {
         return deactivationService.getAllDeactReqs();
     }
 
     @PostMapping("/saveRequest")
-    public void saveDeactReq(@RequestBody ActivationRequestDTO activationRequestDTO){
+    public void saveDeactReq(@RequestBody ActivationRequestDTO activationRequestDTO) {
         deactivationService.saveDeactReqs(activationRequestDTO);
     }
 
@@ -132,8 +136,13 @@ public class DonorController {
     }
 
     @GetMapping("/getSubscribers")
-    public List<SubDetailsDTO> getAllSubDetails(){
+    public List<SubDetailsDTO> getAllSubDetails() {
         return subscriberDetailsService.getAllDetails();
+    }
+//afterForward Request before SchedulePortTime
+    @PostMapping("/cancelDO")
+    public MessageDTO cancelRequest(@RequestBody MessageDTO mobileNumber){
+        return cancelRequestService.processCancellation(mobileNumber);
     }
 
 }

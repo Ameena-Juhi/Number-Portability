@@ -3,6 +3,7 @@ package com.example.RecipientOperator.service;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,34 +53,39 @@ public class ActivationService {
     public MessageDTO acceptRequest(ActivationRequestDTO activationRequest) {
         MessageDTO messageDTO = new MessageDTO();
         LocalDateTime currentDateTime = LocalDateTime.now();
-
-        // Check if the current date and time are the same as the activation time
+    
         LocalDateTime activationTime = activationRequest.getActivationTime();
         if (currentDateTime.isAfter(activationTime)) {
-            if (mobileNumberRepository.findByMobileNumber(activationRequest.getMobileNumber()).get() != null) {
+            Optional<MobileNumber> optionalMobileNumber = mobileNumberRepository.findByMobileNumber(activationRequest.getMobileNumber());
+            if (optionalMobileNumber.isPresent()) {
                 messageDTO.setMessage("Already Added successfully!");
             } else {
-                CustomerAcquisitionForm customerDetails = (customerAcquisitionFormRepository.findByMobileNumber(activationRequest.getMobileNumber())).get();
-                MobileNumber mobileNumber = new MobileNumber();
-                mobileNumber.setMobileNumber(activationRequest.getMobileNumber());
-                mobileNumberRepository.save(mobileNumber);
-                SubscriberDetails subscriberDetails = new SubscriberDetails();
-                subscriberDetails.setMobileNumber(mobileNumber);
-                subscriberDetails.setPortedInDate(new Date());
-                subscriberDetails.setName(customerDetails.getName());
-                subscriberDetails.setAddress(customerDetails.getAddress());
-                subDetailsRepository.save(subscriberDetails);
-                ValidationClearanceDTO clearanceDto = new ValidationClearanceDTO();
-                clearanceDto.setMobileNumber(activationRequest.getMobileNumber());
-                clearanceDto.setValidationClearance(true);
-                this.cafClient.setActivationClearance(clearanceDto);
-                messageDTO.setMessage("Mobile number added successfully.");
+                Optional<CustomerAcquisitionForm> optionalCustomerDetails = customerAcquisitionFormRepository.findByMobileNumber(activationRequest.getMobileNumber());
+                if (optionalCustomerDetails.isPresent()) {
+                    CustomerAcquisitionForm customerDetails = optionalCustomerDetails.get();
+                    MobileNumber mobileNumber = new MobileNumber();
+                    mobileNumber.setMobileNumber(activationRequest.getMobileNumber());
+                    mobileNumberRepository.save(mobileNumber);
+                    SubscriberDetails subscriberDetails = new SubscriberDetails();
+                    subscriberDetails.setMobileNumber(mobileNumber);
+                    subscriberDetails.setPortedInDate(new Date());
+                    subscriberDetails.setName(customerDetails.getName());
+                    subscriberDetails.setAddress(customerDetails.getAddress());
+                    subDetailsRepository.save(subscriberDetails);
+                    ValidationClearanceDTO clearanceDto = new ValidationClearanceDTO();
+                    clearanceDto.setMobileNumber(activationRequest.getMobileNumber());
+                    clearanceDto.setValidationClearance(true);
+                    this.cafClient.setActivationClearance(clearanceDto);
+                    messageDTO.setMessage("Mobile number added successfully.");
+                } else {
+                    messageDTO.setMessage("Customer details not found!");
+                }
             }
         } else {
             messageDTO.setMessage("Activation Time not yet reached!");
         }
-
+    
         return messageDTO;
-
     }
+    
 }

@@ -10,7 +10,7 @@ import com.example.DonorOperator.DTO.ActivationRequestDTO;
 import com.example.DonorOperator.DTO.MessageDTO;
 import com.example.DonorOperator.DTO.ValidationClearanceDTO;
 import com.example.DonorOperator.FeignClient.ClearanceClient;
-import com.example.DonorOperator.entity.DeactivateRequest;
+import com.example.DonorOperator.entity.DeactivationRequest;
 import com.example.DonorOperator.entity.MobileNumber;
 import com.example.DonorOperator.entity.NumbersPorting;
 import com.example.DonorOperator.entity.SubscriberDetails;
@@ -37,7 +37,7 @@ public class DeactivationService {
     @Autowired
     private DeactivationReqRepo deactivationReqRepo;
 
-    public List<DeactivateRequest> getAllDeactReqs() {
+    public List<DeactivationRequest> getAllDeactReqs() {
         return deactivationReqRepo.findAll();
     }
 
@@ -56,7 +56,7 @@ public class DeactivationService {
             subscriberDetailsRepository.delete(subscriberDetails);
             numbersPortingRepository.delete(numbersPortingEntry);
             mobileNumberRepository.delete(mobileEntry);
-            
+
             this.clearanceClient.setDeactivationClearance(clearance);
             messageDTO.setMessage("Mobile number deleted successfully."); // Set the appropriate success message
         } else {
@@ -67,7 +67,7 @@ public class DeactivationService {
     }
 
     public void saveDeactReqs(ActivationRequestDTO activationRequestDTO) {
-        DeactivateRequest request = new DeactivateRequest();
+        DeactivationRequest request = new DeactivationRequest();
         request.setMobileNumber(activationRequestDTO.getMobileNumber());
         request.setActivationTime(activationRequestDTO.getActivationTime());
         deactivationReqRepo.save(request);

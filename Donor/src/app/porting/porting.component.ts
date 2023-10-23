@@ -10,22 +10,22 @@ import { MsgDTO } from '../MsgDTO';
   styleUrls: ['./porting.component.css']
 })
 export class PortingComponent {
-  sms: string = '';
-  response: string = '';
+  sms: MsgDTO = {message:''};
+  response: MsgDTO = {message:''};
 
   constructor(private portingService : PortingService) { }
 
   retrieveMobileNumber() {
     if (this.sms) {
-        this.portingService.getUpc(this.sms).subscribe((result) => {this.response = result;
+        this.portingService.getUpc(this.sms).subscribe((result:MsgDTO) => {this.response = result;
         },
         (error) => {
           console.error('Error:', error);
-          this.response = 'Error occurred while processing the request.';
+          this.response = { message: 'Error occurred while processing the request.' };
         });
-      } 
+    }
     else {
-      this.response = 'No SMS entered.';
+      this.response = { message: 'No SMS entered.' };
     }
   }
 

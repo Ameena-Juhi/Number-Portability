@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class DeactivateRequest {
+public class DeactivationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,4 +18,3 @@ public class DeactivateRequest {
     private LocalDateTime activationTime;
 
 }
-

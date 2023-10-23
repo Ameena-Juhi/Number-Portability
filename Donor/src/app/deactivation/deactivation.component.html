@@ -6,7 +6,7 @@
         <p><strong>Mobile Number: </strong>{{ req.mobileNumber }}</p>
         <p>
           <strong>Activation Time: </strong
-          >{{ req.activationTime | date : "medium" }}
+          >{{ req.activationTime | date : "long" }}
         </p>
         <button
           [ngClass]="{ 'disabled-button': isButtonDisabled }"

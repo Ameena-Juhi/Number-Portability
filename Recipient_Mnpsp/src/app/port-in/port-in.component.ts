@@ -24,7 +24,9 @@ export class PortInComponent {
       this.portinService.getUpc(this.form).subscribe( () => {
         this.successMessage = 'CAF submitted successfully.';
         this.form.mobileNumber = '',
-        this.form.upc = ''
+        this.form.upc = '',
+        this.form.name='',
+        this.form.address=''
       },
       (error) => {
         console.error('Error:', error);

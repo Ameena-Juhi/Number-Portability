@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PortingService } from '../porting.service';
 import { RequestDTO } from '../RequestDTO';
+import { RequestDTOLocale } from '../RequestDTOLocale';
 import { MsgDTO } from '../MsgDTO';
 
 @Component({
@@ -10,10 +11,10 @@ import { MsgDTO } from '../MsgDTO';
 })
 export class DeactivationComponent implements OnInit {
 
-  requests: RequestDTO[] = [];
-  request: RequestDTO = {
+  requests: RequestDTOLocale[] = [];
+  request: RequestDTOLocale = {
     mobileNumber:'',
-    activationTime: new Date('2024-01-01')
+    activationTime: new Date('2024-01-01').toLocaleString()
   };
   isButtonDisabled: boolean = false;
   response: MsgDTO = { message : '' };
@@ -22,7 +23,7 @@ export class DeactivationComponent implements OnInit {
 
   ngOnInit(): void {
     this.portingService.getAllDeactReqs().subscribe(
-      (res: RequestDTO[]) => {
+      (res: RequestDTOLocale[]) => {
         this.requests = res; 
         if (res && res.length > 0) {
           this.request = res[0]; 
@@ -34,7 +35,9 @@ export class DeactivationComponent implements OnInit {
     );
   }
 
-  deactivateSubscriber(request: RequestDTO): void {
+  deactivateSubscriber(request: RequestDTOLocale): void {
+    let dateCorrectedReq = request;
+    dateCorrectedReq.activationTime = this.request.activationTime.toLocaleString();
     this.portingService.requestDeactivation(request).subscribe(
       (res: MsgDTO) => {
         this.response = res;

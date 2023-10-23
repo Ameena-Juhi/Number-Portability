@@ -91,20 +91,18 @@ public class NumberPortabilityDBService {
         NumberPortabilityDB numberPortabilityDB = numDBRepository.findByPortingNumber(mobNum.getMessage());
         boolean clearance = numberPortabilityDB.isClearance();
             if (clearance) {
-                // Get the current time
                 LocalDateTime currentTime = LocalDateTime.now();
     
-                // Add 1 minute to the current time
                 LocalDateTime scheduledTime = currentTime.plusMinutes(1);
     
-                // Scheduled time is 1 minute ahead of the current time
                 return scheduledTime;
             }
-            // Return null if validationClearance is false
+            
             return null;
         }
 
         public void updatePortabilityDB(MessageDTO portingNumber) {
+            System.out.println("updated");
             String mobNum = portingNumber.getMessage();
             NumberPortabilityDB portabilityDB = numDBRepository.findByPortingNumber(mobNum);
             FinalClearance finalClearance = finalClearanceRepo.findByMobileNumClearance(mobNum);

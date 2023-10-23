@@ -16,7 +16,9 @@ import com.example.RecipientOperator.DTO.SubDetailsDTO;
 import com.example.RecipientOperator.entity.ActivationRequest;
 import com.example.RecipientOperator.entity.CustomerAcquisitionForm;
 import com.example.RecipientOperator.service.ActivationService;
+import com.example.RecipientOperator.service.CancelRequestService;
 import com.example.RecipientOperator.service.CustomerAcquisitionFormService;
+import com.example.RecipientOperator.service.ResourceNotFoundException;
 import com.example.RecipientOperator.service.SubscriberDetailsService;
 
 @CrossOrigin
@@ -32,6 +34,9 @@ public class Port_InController {
 
     @Autowired
     private SubscriberDetailsService subscriberDetailsService;
+
+    @Autowired
+    private CancelRequestService cancelRequestService;
 
 
     @GetMapping("/allrequests")
@@ -63,5 +68,11 @@ public class Port_InController {
     public List<SubDetailsDTO> getAllSubDetails(){
         return this.subscriberDetailsService.getAllDetails();
     }
+
+    @PostMapping("/cancelRO")
+    public MessageDTO cancellationRequest(@RequestBody MessageDTO mobileNumber) throws ResourceNotFoundException{
+        return cancelRequestService.cancelRequest(mobileNumber);
+    }
+
 
 }

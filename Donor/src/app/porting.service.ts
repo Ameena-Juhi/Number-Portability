@@ -5,6 +5,7 @@ import { RequestDTO } from './RequestDTO';
 import { MsgDTO } from './MsgDTO';
 import { CafDTO } from './cafDTO';
 import { SubDetailsDto } from './SubDetailsDto';
+import { RequestDTOLocale } from './RequestDTOLocale';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,9 @@ export class PortingService {
 
   constructor(private http : HttpClient) { }
 
-  getUpc(sms : string) : Observable<string>{
+  getUpc(sms : MsgDTO) : Observable<MsgDTO>{
 
-    return this.http.post<string>("http://localhost:8081/operator/port",{sms});
+    return this.http.post<MsgDTO>("http://localhost:8081/operator/port",sms);
   }
 
   getAllRequests():Observable<CafDTO[]>{
@@ -26,11 +27,11 @@ export class PortingService {
     return this.http.post<boolean>("http://localhost:8081/operator/validate",form);
   }
 
-  getAllDeactReqs():Observable<RequestDTO[]>{
-    return this.http.get<RequestDTO[]>("http://localhost:8081/operator/allDeactReqs");
+  getAllDeactReqs():Observable<RequestDTOLocale[]>{
+    return this.http.get<RequestDTOLocale[]>("http://localhost:8081/operator/allDeactReqs");
   }
 
-  requestDeactivation(request : RequestDTO): Observable<MsgDTO>{
+  requestDeactivation(request : RequestDTOLocale): Observable<MsgDTO>{
     return this.http.post<MsgDTO>("http://localhost:8081/operator/deactivation",request);
   }
 
