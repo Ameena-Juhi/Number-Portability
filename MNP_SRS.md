@@ -3,8 +3,8 @@
 **Software Requirements Specification (SRS) for Mobile Number Portability 
 Project**
 
-													Author:Ameena Juhi
-													Published On:10-10-2023
+											Author:Ameena Juhi
+											Published On:10-10-2023
 
 **1. Introduction**
 The Mobile Number Portability project aims to build portals for both the Source Operator and Target Operator to facilitate Mobile Number Portability (MNP) . The project includes the creation of stubs for other systems to simulate API responses for fulfillment, regulatory systems, and reference MNP flow demonstration. This document outlines the functional and non-functional requirements, architecture, and specifications for the project.
@@ -14,8 +14,9 @@ The user will be called as the subscriber.
 
 **1.1 Project Scope**
 The scope of this project includes the following activities:
-- Sending a porting request to the Recipient Operator
-- Recipient Operator sends the porting request to Donor Operator
+- Sending a porting request to the Recipient Operator(RO)
+- Recipient Operator(RO) sends the customer acquisition form to the Mobile Number Porting Service Provider(MNPSP)
+- MNPSP after successful validation in the Number Portability Database(NPDB) forwards the porting request to Donor Operator
 - Donor Operator validates the details of the subscriber.
 - Successfully port the mobile number
 - Failure due to an error either on the Donor Operator's end or Recipient Operator's  end.
