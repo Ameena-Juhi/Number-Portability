@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { RequestDTO } from './RequestDTO';
 import { messageDTO } from './messageDTO';
-import { CafDTO } from './CafDTO';
 import { CAF } from './CAF';
 import { SubDetailsDto } from './SubDetailsDto';
 
@@ -18,8 +17,8 @@ export class PortingService {
     return this.http.post<void>("http://localhost:8082/request/portin",Caf);
   }
 
-  getAllPortingRquests(): Observable<CafDTO[]>{
-    return this.http.get<CafDTO[]>("http://localhost:8082/request/allrequests");
+  getAllPortingRquests(): Observable<CAF[]>{
+    return this.http.get<CAF[]>("http://localhost:8082/request/allrequests");
   }
 
   saveActivationReq(activationRequest:RequestDTO ):Observable<void>{
@@ -36,6 +35,10 @@ export class PortingService {
 
   getSubDetails():Observable<SubDetailsDto[]>{
     return this.http.get<SubDetailsDto[]>("http://localhost:8082/request/getSubscribers");
+  }
+
+  cancelRequest(mobileNumber:messageDTO):Observable<messageDTO>{
+    return this.http.post<messageDTO>("http://localhost:8082/request/cancelRO",mobileNumber);
   }
 
 }

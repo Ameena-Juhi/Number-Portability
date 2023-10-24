@@ -18,5 +18,7 @@ public class ForwardedRequests {
     @Column
     private String mobileNumber;
     private String upc;
+    private String name;
+    private String address;
 
 }

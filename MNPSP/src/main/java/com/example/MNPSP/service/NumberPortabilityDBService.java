@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,25 +27,46 @@ public class NumberPortabilityDBService {
     @Autowired
     private FinalClearanceRepo finalClearanceRepo;
 
-    private static final long TIME_THRESHOLD = 4 * 60 * 1000; // 4 minutes
+    private static final long TIME_THRESHOLD = 9 * 60 * 1000; // 9 minutes
 
     public MessageDTO checkNPDB(CAFdto form) {
-        NumberPortabilityDB numDB = numDBRepository.findByPortingNumber(form.getMobileNumber());
+        Optional<NumberPortabilityDB> optionalNumDB = numDBRepository.findByPortingNumber(form.getMobileNumber());
 
-        if (numDB == null) {
-            // If the record does not exist, create a new one.
+        if (!optionalNumDB.isPresent()) {
             NumberPortabilityDB newNumDB = new NumberPortabilityDB();
             newNumDB.setPortingNumber(form.getMobileNumber());
             newNumDB.setPending(true);
             numDBRepository.save(newNumDB);
             return createResponse("Request Accepted");
         } else {
+            NumberPortabilityDB numDB = optionalNumDB.get();
             if (numDB.isPending()) {
                 return createResponse("Request is Pending!");
             } else {
                 return checkPortedInfo(numDB);
             }
         }
+    }
+
+    public boolean storeIdentityClearance(ValidationClearanceDTO validationClearanceDTO) {
+        Optional<NumberPortabilityDB> optionalNumberPortabilityDB = numDBRepository.findByPortingNumber(
+                validationClearanceDTO.getMobileNumber());
+        if (optionalNumberPortabilityDB.isPresent()) {
+            NumberPortabilityDB numberPortabilityDB = optionalNumberPortabilityDB.get();
+            boolean clearance = validationClearanceDTO.isValidationClearance();
+            numberPortabilityDB.setIdentityClearance(clearance);
+            numDBRepository.save(numberPortabilityDB);
+            return clearance;
+        }
+        return false;
+    }
+
+    public boolean getClearance(MessageDTO mobNum) {
+        String mobileNum = mobNum.getMessage();
+        if (numDBRepository.findByPortingNumber(mobileNum).get().isClearance()) {
+            return true;
+        }
+        return false;
     }
 
     private MessageDTO createResponse(String message) {
@@ -78,40 +100,43 @@ public class NumberPortabilityDBService {
         return portingStatusDTOs;
     }
 
-    public void storeDonorClearance(ValidationClearanceDTO validationClearanceDTO){
-        NumberPortabilityDB numberPortabilityDB = numDBRepository.findByPortingNumber(validationClearanceDTO.getMobileNumber());
-        if(numberPortabilityDB!=null){
+    public void storeDonorClearance(ValidationClearanceDTO validationClearanceDTO) {
+        NumberPortabilityDB numberPortabilityDB = numDBRepository
+                .findByPortingNumber(validationClearanceDTO.getMobileNumber()).get();
+        if (numberPortabilityDB != null) {
             numberPortabilityDB.setClearance(validationClearanceDTO.isValidationClearance());
             numDBRepository.save(numberPortabilityDB);
         }
         return;
     }
 
-    public LocalDateTime schedulePortDateTime(MessageDTO mobNum){
-        NumberPortabilityDB numberPortabilityDB = numDBRepository.findByPortingNumber(mobNum.getMessage());
+    public LocalDateTime schedulePortDateTime(MessageDTO mobNum) {
+        NumberPortabilityDB numberPortabilityDB = numDBRepository.findByPortingNumber(mobNum.getMessage()).get();
         boolean clearance = numberPortabilityDB.isClearance();
-            if (clearance) {
-                LocalDateTime currentTime = LocalDateTime.now();
-    
-                LocalDateTime scheduledTime = currentTime.plusMinutes(1);
-    
-                return scheduledTime;
-            }
-            
-            return null;
+        if (clearance) {
+            LocalDateTime currentTime = LocalDateTime.now();
+
+            LocalDateTime scheduledTime = currentTime.plusMinutes(1);
+
+            return scheduledTime;
         }
 
-        public void updatePortabilityDB(MessageDTO portingNumber) {
-            System.out.println("updated");
-            String mobNum = portingNumber.getMessage();
-            NumberPortabilityDB portabilityDB = numDBRepository.findByPortingNumber(mobNum);
-            FinalClearance finalClearance = finalClearanceRepo.findByMobileNumClearance(mobNum);
-            if (finalClearance.isActivationClearance() && finalClearance.isDeactivationClearance()) {
-                portabilityDB.setPending(false);
-                portabilityDB.setPorted(true);
-                portabilityDB.setPortedAt(new Date());
-                numDBRepository.save(portabilityDB);
-            }
+        return null;
+    }
+
+    public boolean updatePortabilityDB(MessageDTO portingNumber) {
+        System.out.println("updated");
+        String mobNum = portingNumber.getMessage();
+        NumberPortabilityDB portabilityDB = numDBRepository.findByPortingNumber(mobNum).get();
+        FinalClearance finalClearance = finalClearanceRepo.findByMobileNumClearance(mobNum);
+        if (finalClearance.isActivationClearance() && finalClearance.isDeactivationClearance()) {
+            portabilityDB.setPending(false);
+            portabilityDB.setPorted(true);
+            portabilityDB.setPortedAt(new Date());
+            numDBRepository.save(portabilityDB);
+            return true;
         }
-    
+        return false;
+    }
+
 }

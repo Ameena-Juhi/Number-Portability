@@ -12,7 +12,7 @@ import com.example.MNPSP.DTO.MessageDTO;
 public interface forwardcaf {
 
     @PostMapping("/passedcaf")
-    MessageDTO sendCAFToDonor(@RequestBody CAFdto Form);
+    boolean sendCAFToDonor(@RequestBody CAFdto Form);
 
     @PostMapping("/deactivation")
     public MessageDTO deactivateMobileNumber(@RequestBody ActivationRequestDTO deactivationRequest);

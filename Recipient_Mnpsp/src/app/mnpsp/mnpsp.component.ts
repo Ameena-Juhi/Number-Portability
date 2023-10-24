@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { MNPSPService } from '../mnpsp.service';
 import { PortingService } from '../port-in.service';
 import { messageDTO } from '../messageDTO';
-import { CafDTO } from '../CafDTO';
+import { CAF } from '../CAF';
+import { DonorService } from '../donor.service';
 
 @Component({
   selector: 'app-mnpsp',
@@ -12,17 +13,20 @@ import { CafDTO } from '../CafDTO';
 
 export class MNPSPComponent {
 
-  caf : CafDTO[] =[];
+  caf : CAF[] =[];
   response: messageDTO = { message: '' }; 
+  inputNumber : messageDTO = {message:''};
+  responses : String[] = [];
 
   constructor(private mnpspService : MNPSPService,
-    private portinService : PortingService){}
+    private portinService : PortingService,
+    private donorService : DonorService){}
 
   ngOnInit(): void {
     this.portinService.getAllPortingRquests().subscribe(res => this.caf = res);
   }
   
-  getValidation(form: CafDTO): void {
+  getValidation(form: CAF): void {
     this.mnpspService.Validate(form).subscribe(
       (response : messageDTO) => {
         this.response = response;
@@ -34,7 +38,25 @@ export class MNPSPComponent {
     );
   }
 
+  cancelTheRequest(form: CAF) {
+    this.inputNumber.message = form.mobileNumber;
+    const responses: string[] = [];
+    const cancelRequestPromise = this.portinService.cancelRequest(this.inputNumber).toPromise();
+    const cancelReqMNPSPPromise = this.mnpspService.cancelReqMNPSP(this.inputNumber).toPromise();
+    const cancelDOPromise = this.donorService.cancelDO(this.inputNumber).toPromise();
   
-  
-
+    Promise.all([cancelRequestPromise, cancelReqMNPSPPromise, cancelDOPromise])
+      .then((values) => {
+        values.forEach((res: any) => {
+          if (res && res.message) {
+            responses.push(res.message);
+          }
+        });
+        alert(responses);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
 }
+  

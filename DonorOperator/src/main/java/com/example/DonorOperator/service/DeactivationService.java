@@ -47,7 +47,8 @@ public class DeactivationService {
         LocalDateTime scheduledTime = deactivationRequest.getActivationTime();
 
         if (currentDateTime.isAfter(scheduledTime)) {
-            MobileNumber mobileEntry = mobileNumberRepository.findByMobileNumber(deactivationRequest.getMobileNumber());
+            MobileNumber mobileEntry = mobileNumberRepository.findByMobileNumber(deactivationRequest.getMobileNumber())
+                    .get();
             SubscriberDetails subscriberDetails = subscriberDetailsRepository.findbymobilenum_id(mobileEntry.getId());
             NumbersPorting numbersPortingEntry = numbersPortingRepository.findByMobileNumberId(mobileEntry.getId());
             ValidationClearanceDTO clearance = new ValidationClearanceDTO();

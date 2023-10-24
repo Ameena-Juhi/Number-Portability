@@ -10,10 +10,11 @@ import { CAF } from '../CAF';
 export class PortInComponent {
 
   form : CAF = {
-    name:'',
-    address:'',
+    name: '',
+    address: '',
     mobileNumber: '',
-    upc: ''
+    upc: '',
+    clearance: false
   };
   successMessage : string ='';
 

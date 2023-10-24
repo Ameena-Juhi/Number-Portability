@@ -26,9 +26,9 @@ public class PortingVerificationService {
     private SubscriberDetailsRepository subscriberDetailsRepository;
 
     public NumbersPorting getPortingRequest(String mobNum) throws ResourceNotFoundException {
-        if (mobileNumberRepository.findByMobileNumber(mobNum) != null) {
+        if (mobileNumberRepository.findByMobileNumber(mobNum).isPresent()) {
             System.out.println("mobdetails");
-            Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).getId();
+            Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).get().getId();
             return (numbersPortingRepository.findByMobileNumberId(mobileNum_id));
         }
         throw new ResourceNotFoundException(mobNum + "is not found in DB");
@@ -36,9 +36,9 @@ public class PortingVerificationService {
 
     public SubscriberDetails getSubscriberDetails(String mobNum) throws ResourceNotFoundException {
 
-        if (mobileNumberRepository.findByMobileNumber(mobNum) != null) {
+        if (mobileNumberRepository.findByMobileNumber(mobNum).isPresent()) {
             System.out.println("subdetails");
-            Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).getId();
+            Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).get().getId();
             return (subscriberDetailsRepository.findbymobilenum_id(mobileNum_id));
         }
         throw new ResourceNotFoundException(mobNum + "is not found in DB");

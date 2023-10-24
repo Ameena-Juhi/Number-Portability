@@ -10,7 +10,13 @@ import { MsgDTO } from '../MsgDTO';
 })
 export class ValidateRequestsComponent implements OnInit {
   forms: CafDTO[] = [];
-  form: CafDTO = { mobileNumber: '', upc: '' }; 
+  form: CafDTO = {
+    mobileNumber: '', upc: '',
+    name: '',
+    address: '',
+    clearance: false
+  }; 
+  response : string ='';
 
   constructor(
     private portingService: PortingService
@@ -19,9 +25,9 @@ export class ValidateRequestsComponent implements OnInit {
   ngOnInit(): void {
     this.portingService.getAllRequests().subscribe(
       (res: CafDTO[]) => {
-        this.forms = res; // assigning the response to forms
+        this.forms = res; 
         if (res && res.length > 0) {
-          this.form = res[0]; // Ensure the 'form' variable is assigned with the first element of the response
+          this.form = res[0]; 
         }
       },
       (error) => {
@@ -32,9 +38,8 @@ export class ValidateRequestsComponent implements OnInit {
 
   validateRequest(form: CafDTO) {
     this.portingService.validate(form).subscribe(
-      (res: boolean) => {
-        let message = res ? 'Validation Successful!' : 'Validation Failed!';
-        alert(message);
+      (res:MsgDTO) => {
+        alert(this.response = res.message);
       },
       (error) => {
         console.error('Error:', error);

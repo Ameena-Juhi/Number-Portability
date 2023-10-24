@@ -28,44 +28,43 @@ public class MobileNumberService {
 
         MessageDTO msg = new MessageDTO();
         String sms = SMS.getMessage();
-        boolean smsFormat =  this.validateSMS(sms);
-        if(smsFormat){
-        Pattern pattern = Pattern.compile("\\d{10}");
-        Matcher matcher = pattern.matcher(sms);
-        String mobileNumber = "";
+        boolean smsFormat = this.validateSMS(sms);
+        if (smsFormat) {
+            Pattern pattern = Pattern.compile("\\d{10}");
+            Matcher matcher = pattern.matcher(sms);
+            String mobileNumber = "";
 
-        while (matcher.find()) {
-            mobileNumber = matcher.group();
-        }
-
-        if (!mobileNumber.isEmpty()) {
-            MobileNumber existingMobileNumber = mobileNumberRepository.findByMobileNumber(mobileNumber);
-            if (existingMobileNumber == null) {
-                throw new ResourceNotFoundException("Resource Not Found Exception " + mobileNumber);
+            while (matcher.find()) {
+                mobileNumber = matcher.group();
             }
-            NumbersPorting portingNumber = numbersPortingRepository.findByMobileNumberId(existingMobileNumber.getId());
-            if (portingNumber != null) {
-                Date upcGenDate = portingNumber.getRequestedUpcTime();
-                Date currentDate = new Date();
-                long timeDifference = (currentDate.getTime() - upcGenDate.getTime()) / (60 * 1000);
-                if (timeDifference >= 40) {
-                    String upc = generateUniquePortingCode();
-                    portingNumber.setUpc(upc);
-                    portingNumber.setRequestedUpcTime(new Date());
-                    numbersPortingRepository.save(portingNumber);
-                    msg.setMessage(upc);
-                } else {
-                    msg.setMessage("Already generated UPC for this number!");
+
+            if (!mobileNumber.isEmpty()) {
+                MobileNumber existingMobileNumber = mobileNumberRepository.findByMobileNumber(mobileNumber).get();
+                if (existingMobileNumber == null) {
+                    throw new ResourceNotFoundException("Resource Not Found Exception " + mobileNumber);
                 }
-            } else {
-                createNewPorting(existingMobileNumber, msg);
+                NumbersPorting portingNumber = numbersPortingRepository
+                        .findByMobileNumberId(existingMobileNumber.getId());
+                if (portingNumber != null) {
+                    Date upcGenDate = portingNumber.getRequestedUpcTime();
+                    Date currentDate = new Date();
+                    long timeDifference = (currentDate.getTime() - upcGenDate.getTime()) / (60 * 1000);
+                    if (timeDifference >= 40) {
+                        String upc = generateUniquePortingCode();
+                        portingNumber.setUpc(upc);
+                        portingNumber.setRequestedUpcTime(new Date());
+                        numbersPortingRepository.save(portingNumber);
+                        msg.setMessage(upc);
+                    } else {
+                        msg.setMessage("Already generated UPC for this number!");
+                    }
+                } else {
+                    createNewPorting(existingMobileNumber, msg);
+                }
             }
-        } 
-    }
-         else {
+        } else {
             msg.setMessage("Not a valid SMS.");
         }
-    
 
         return msg;
     }
@@ -88,7 +87,7 @@ public class MobileNumberService {
     }
 
     public boolean validateSMS(String sms) {
-        String regex = "^Port\\s\\d{10}$";
+        String regex = "(?i)^port\\s\\d{10}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(sms);
         return matcher.matches();

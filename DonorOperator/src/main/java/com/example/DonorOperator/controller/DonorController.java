@@ -27,10 +27,11 @@ import com.example.DonorOperator.service.DeactivationService;
 import com.example.DonorOperator.service.ForwardedReqService;
 import com.example.DonorOperator.service.MobileNumberService;
 import com.example.DonorOperator.service.PortingVerificationService;
+import com.example.DonorOperator.service.RejectionPortService;
 import com.example.DonorOperator.service.SubscriberDetailsService;
 
 @RestController
-@CrossOrigin(origins = { "http://localhost:53840/", "http://localhost:4200" })
+@CrossOrigin(origins = { "http://localhost:59904/", "http://localhost:4200" })
 @RequestMapping("/operator")
 public class DonorController {
 
@@ -56,7 +57,7 @@ public class DonorController {
     private SubscriberDetailsService subscriberDetailsService;
 
     @Autowired
-    private CancelRequestService cancelRequestService;
+    private RejectionPortService rejectionPortService;
 
     @GetMapping("/get")
     public List<MobileNumber> getMobNums() {
@@ -69,11 +70,14 @@ public class DonorController {
     }
 
     @PostMapping("/passedcaf")
-    public MessageDTO sendCAFToDonor(@RequestBody CAFdto Form) {
-        MessageDTO msg = new MessageDTO();
-        forwardedReqService.saveCAFDTO(Form);
-        msg.setMessage("Forwarded the request successfully!");
-        return msg;
+    public boolean sendCAFToDonor(@RequestBody CAFdto form) {
+        System.out.println("pssedcaf");
+        boolean identityVerification = forwardedReqService.saveCAFDTO(form);
+        ValidationClearanceDTO clearancedto = new ValidationClearanceDTO();
+        clearancedto.setMobileNumber(form.getMobileNumber());
+        clearancedto.setValidationClearance(identityVerification);
+        this.clearanceClient.storeIdentityClearance(clearancedto);
+        return identityVerification;
     }
 
     @GetMapping("/getRequests")
@@ -82,7 +86,8 @@ public class DonorController {
     }
 
     @PostMapping("/validate")
-    public boolean respondToPortingRequest(@RequestBody CAFdto form) throws ResourceNotFoundException {
+    public MessageDTO respondToPortingRequest(@RequestBody CAFdto form) throws ResourceNotFoundException {
+        MessageDTO msg = new MessageDTO();
         boolean clearance;
         List<String> errorMessages = new ArrayList<>();
 
@@ -107,17 +112,17 @@ public class DonorController {
         }
 
         if (!errorMessages.isEmpty()) {
-            System.out.println("Errors: " + errorMessages); // Print error messages
+            msg.setMessage("Response: " + errorMessages);
             clearance = false;
-            return clearance;
+            return msg;
         }
         clearance = true;
         ValidationClearanceDTO clearancedto = new ValidationClearanceDTO();
         clearancedto.setMobileNumber(form.getMobileNumber());
         clearancedto.setValidationClearance(clearance);
         this.clearanceClient.storeClearance(clearancedto);
-
-        return clearance;
+        msg.setMessage("Successfully validated!");
+        return msg;
     }
 
     @GetMapping("/allDeactReqs")
@@ -139,10 +144,11 @@ public class DonorController {
     public List<SubDetailsDTO> getAllSubDetails() {
         return subscriberDetailsService.getAllDetails();
     }
-//afterForward Request before SchedulePortTime
-    @PostMapping("/cancelDO")
-    public MessageDTO cancelRequest(@RequestBody MessageDTO mobileNumber){
-        return cancelRequestService.processCancellation(mobileNumber);
+
+    // afterForward Request before SchedulePortTime
+    @PostMapping("/rejectDO")
+    public MessageDTO cancelRequest(@RequestBody MessageDTO mobileNumber) {
+        return rejectionPortService.processRejection(mobileNumber);
     }
 
 }

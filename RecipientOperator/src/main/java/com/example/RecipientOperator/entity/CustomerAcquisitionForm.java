@@ -31,6 +31,7 @@ public class CustomerAcquisitionForm {
     @Column
     private String name;
     private String address;
+    private boolean identityClearance;
     
 
 

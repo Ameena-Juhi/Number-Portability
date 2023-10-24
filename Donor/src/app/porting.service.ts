@@ -3,9 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { RequestDTO } from './RequestDTO';
 import { MsgDTO } from './MsgDTO';
-import { CafDTO } from './cafDTO';
 import { SubDetailsDto } from './SubDetailsDto';
 import { RequestDTOLocale } from './RequestDTOLocale';
+import { CafDTO } from './cafDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +23,8 @@ export class PortingService {
     return this.http.get<CafDTO[]>("http://localhost:8081/operator/getRequests");
   }
 
-  validate(form : CafDTO): Observable<boolean>{
-    return this.http.post<boolean>("http://localhost:8081/operator/validate",form);
+  validate(form : CafDTO): Observable<MsgDTO>{
+    return this.http.post<MsgDTO>("http://localhost:8081/operator/validate",form);
   }
 
   getAllDeactReqs():Observable<RequestDTOLocale[]>{

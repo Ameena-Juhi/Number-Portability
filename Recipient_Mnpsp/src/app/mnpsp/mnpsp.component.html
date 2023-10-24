@@ -2,6 +2,8 @@
 <table class="portal-table">
   <thead>
     <tr>
+      <th>Name</th>
+      <th>Address</th>
       <th>Mobile Number</th>
       <th>Unique Porting Code (UPC)</th>
       <th>Action</th>
@@ -9,6 +11,8 @@
   </thead>
   <tbody>
     <tr *ngFor="let form of caf">
+      <td>{{ form.name }}</td>
+      <td>{{ form.address }}</td>
       <td>{{ form.mobileNumber }}</td>
       <td>{{ form.upc }}</td>
       <td>
@@ -19,7 +23,13 @@
         >
           Forward to MNPSP
         </button>
-        <button class="action-button cancel-button">Cancel the request</button>
+        <button
+          class="action-button cancel-button"
+          type="button"
+          (click)="cancelTheRequest(form)"
+        >
+          Cancel the request
+        </button>
       </td>
     </tr>
   </tbody>

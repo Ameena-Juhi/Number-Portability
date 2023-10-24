@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CafDTO } from '../CafDTO';
 import { messageDTO } from '../messageDTO';
 import { MNPSPService } from '../mnpsp.service';
 import { PortingService } from '../port-in.service';
 import { RequestDTO } from '../RequestDTO';
 import { DonorService } from '../donor.service';
 import { validationClearancedto } from '../ValidationClearancedto';
+import { CAF } from '../CAF';
 
 @Component({
   selector: 'app-mnpsp-validation',
@@ -13,8 +13,11 @@ import { validationClearancedto } from '../ValidationClearancedto';
   styleUrls: ['./mnpsp-validation.component.css']
 })
 export class MnpspValidationComponent implements OnInit {
-  forms: CafDTO[] = [];
-  form: CafDTO = { mobileNumber: '', upc: '' };
+  forms: CAF[] = [];
+  form: CAF = {
+    mobileNumber: '', upc: '', name: '', address: '',
+    clearance: false
+  };
   response: messageDTO = { message: '' };
   inputMobNum: messageDTO = { message: '' };
   request: RequestDTO = { mobileNumber: '', activationTime: new Date('2024-01-01') };
@@ -28,7 +31,7 @@ export class MnpspValidationComponent implements OnInit {
 
   ngOnInit(): void {
     this.portinService.getAllPortingRquests().subscribe(
-      (res: CafDTO[]) => {
+      (res: CAF[]) => {
         this.forms = res; // assigning the response to forms
         if (res && res.length > 0) {
           this.form = res[0];
@@ -40,13 +43,28 @@ export class MnpspValidationComponent implements OnInit {
     );
   }
 
-  forwardForm(form: CafDTO) {
-    this.mnpspService.processToDonor(form).subscribe(() => {
-      alert('Request forwarded to Donor Operator successfully!');
+  forwardForm(form: CAF) {
+    this.mnpspService.processToDonor(form).subscribe((res: boolean) => {
+      let message = res ? 'Request forwarded to Donor Operator successfully!' : 'Unsuccessful!';
+        alert(message);
+    
     });
   }
 
-  schedulePortingTime(form: CafDTO) {
+  getClearance(form: CAF) {
+    this.inputMobNum.message = form.mobileNumber;
+    this.mnpspService.getClearance(this.inputMobNum).subscribe(
+      (res: boolean) => {
+        form.clearance = res; // Store the clearance response for the current form
+        
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+
+  schedulePortingTime(form: CAF) {
     this.inputMobNum.message = form.mobileNumber;
     this.mnpspService.scheduleTime(this.inputMobNum).subscribe(
       (res: Date) => {
@@ -65,4 +83,6 @@ export class MnpspValidationComponent implements OnInit {
       }
     );
   }
+
+    
 }

@@ -1,28 +1,36 @@
 .container {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .request-list {
-    margin-top: 20px;
-  }
-  
-  .request-item {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .forward-button {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-  
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.request-list {
+  margin-top: 20px;
+}
+
+.request-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.request-details {
+  margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.forward-button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  flex: 1;
+  margin-right: 10px;
+}

@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.RecipientOperator.DTO.ActivationRequestDTO;
 import com.example.RecipientOperator.DTO.MessageDTO;
 import com.example.RecipientOperator.DTO.SubDetailsDTO;
+import com.example.RecipientOperator.DTO.ValidationClearanceDTO;
 import com.example.RecipientOperator.entity.ActivationRequest;
 import com.example.RecipientOperator.entity.CustomerAcquisitionForm;
+import com.example.RecipientOperator.feignClient.CAFClient;
 import com.example.RecipientOperator.service.ActivationService;
+import com.example.RecipientOperator.service.CAFClientService;
 import com.example.RecipientOperator.service.CancelRequestService;
 import com.example.RecipientOperator.service.CustomerAcquisitionFormService;
 import com.example.RecipientOperator.service.ResourceNotFoundException;
@@ -38,6 +41,8 @@ public class Port_InController {
     @Autowired
     private CancelRequestService cancelRequestService;
 
+    @Autowired
+    private CAFClientService cafClientService;
 
     @GetMapping("/allrequests")
     public List<CustomerAcquisitionForm> getAllRequests() {
@@ -50,13 +55,19 @@ public class Port_InController {
     }
 
     @PostMapping("/saveRequest")
-    public void saveActivationRequest(@RequestBody ActivationRequestDTO requestDTO){
+    public void saveActivationRequest(@RequestBody ActivationRequestDTO requestDTO) {
         activationService.saveActivationReq(requestDTO);
     }
 
     @GetMapping("/activationRequests")
-    public List<ActivationRequest> getAllActivationRequest(){
+    public List<ActivationRequest> getAllActivationRequest() {
         return activationService.getAllActivationRequests();
+    }
+
+    @PostMapping("/checkidentity")
+    public boolean storeIdentityClearance(@RequestBody ValidationClearanceDTO IdentityClearanceDTO) {
+        System.out.println("checkidentity");
+        return this.cafClientService.storeIdentityClearance(IdentityClearanceDTO);
     }
 
     @PostMapping("/activation")
@@ -65,14 +76,13 @@ public class Port_InController {
     }
 
     @GetMapping("/getSubscribers")
-    public List<SubDetailsDTO> getAllSubDetails(){
+    public List<SubDetailsDTO> getAllSubDetails() {
         return this.subscriberDetailsService.getAllDetails();
     }
 
     @PostMapping("/cancelRO")
-    public MessageDTO cancellationRequest(@RequestBody MessageDTO mobileNumber) throws ResourceNotFoundException{
+    public MessageDTO cancellationRequest(@RequestBody MessageDTO mobileNumber) throws ResourceNotFoundException {
         return cancelRequestService.cancelRequest(mobileNumber);
     }
-
 
 }

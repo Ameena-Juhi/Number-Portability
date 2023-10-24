@@ -16,7 +16,7 @@ public class CustomerAcquisitionFormService {
     private CustomerAcquisitionFormRepository CAFRepository;
 
     public void saveCustomerForm(CustomerAcquisitionForm form) {
-        
+        form.isIdentityClearance();
         form.setRequestedTime(new Date());
         CAFRepository.save(form);
     }

@@ -12,13 +12,13 @@ public class CancelRequestService {
     @Autowired
     private NumberPortabilityDBRepository numberPortabilityDBRepository;
 
-    public MessageDTO processCancellation(MessageDTO mobileNumber){
+    public MessageDTO processCancellation(MessageDTO mobileNumber) {
         MessageDTO msg = new MessageDTO();
         String mobNum = mobileNumber.getMessage();
         numberPortabilityDBRepository.deleteById(
-            (numberPortabilityDBRepository.findByPortingNumber(mobNum).get()).getId());
-        msg.setMessage("Succesfully cancelled!");
+                (numberPortabilityDBRepository.findByPortingNumber(mobNum).get()).getId());
+        msg.setMessage("Succesfully cancelled at MNPSP!");
         return msg;
     }
-    
+
 }

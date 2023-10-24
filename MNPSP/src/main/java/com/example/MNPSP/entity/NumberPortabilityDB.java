@@ -27,6 +27,7 @@ public class NumberPortabilityDB {
     private boolean ported;
 
     private boolean clearance;
+    private boolean IdentityClearance;
 
     private Date portedAt;
 }

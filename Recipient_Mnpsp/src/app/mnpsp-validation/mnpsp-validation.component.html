@@ -2,14 +2,22 @@
   <h2>List of Requests</h2>
   <div class="request-list">
     <div *ngFor="let item of forms" class="request-item">
-      <p>Mobile Number: {{ item.mobileNumber }}</p>
-      <p>UPC: {{ item.upc }}</p>
-      <button (click)="forwardForm(item)" class="forward-button">
-        Forward
-      </button>
-      <button (click)="schedulePortingTime(item)" class="forward-button">
-        Schedule Porting Time
-      </button>
+      <div class="request-details">
+        <p><strong>Mobile Number:</strong> {{ item.mobileNumber }}</p>
+        <p><strong>UPC:</strong> {{ item.upc }}</p>
+        <p><strong>Donor Operator Validation:</strong> {{ item.clearance }}</p>
+      </div>
+      <div class="button-container">
+        <button (click)="getClearance(item)" class="forward-button">
+          Clearance
+        </button>
+        <button (click)="forwardForm(item)" class="forward-button">
+          Forward
+        </button>
+        <button (click)="schedulePortingTime(item)" class="forward-button">
+          Schedule Porting Time
+        </button>
+      </div>
     </div>
   </div>
 </div>
