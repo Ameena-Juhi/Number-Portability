@@ -55,7 +55,7 @@ public class ForwardedReqService {
     }
 
     public boolean checkIdentity(CAFdto form) {
-        System.out.println("checkide");
+
         String mobNum = form.getMobileNumber();
         String name = form.getName();
         String address = form.getAddress();

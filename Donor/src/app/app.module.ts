@@ -9,13 +9,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { ValidateRequestsComponent } from './validate-requests/validate-requests.component';
 import { DeactivationComponent } from './deactivation/deactivation.component';
 import { SubscribersComponent } from './subscribers/subscribers.component';
+import { CancelComponent } from './cancel/cancel.component';
 @NgModule({
   declarations: [
     AppComponent,
     PortingComponent,
     ValidateRequestsComponent,
     DeactivationComponent,
-    SubscribersComponent
+    SubscribersComponent,
+    CancelComponent
   ],
   imports: [
     BrowserModule,

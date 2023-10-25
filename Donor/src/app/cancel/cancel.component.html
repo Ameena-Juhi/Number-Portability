@@ -1,0 +1,15 @@
+<div class="sms-form">
+  <h2>Cancel Port Request</h2>
+  <div class="form-group">
+    <label for="smsInput">SMS:</label>
+    <input
+      type="text"
+      id="smsInput"
+      [(ngModel)]="sms.message"
+      name="smsInput"
+      placeholder="Enter your SMS here"
+    />
+  </div>
+  <button (click)="cancelPortRequest()">SMS 1900</button>
+  <p class="response">{{ response.message }}</p>
+</div>

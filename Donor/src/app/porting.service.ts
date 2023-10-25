@@ -38,5 +38,9 @@ export class PortingService {
   getSubscribers():Observable<SubDetailsDto[]>{
     return this.http.get<SubDetailsDto[]>("http://localhost:8081/operator/getSubscribers");
   }
+
+  cancelRequest(sms:MsgDTO):Observable<MsgDTO>{
+    return this.http.post<MsgDTO>("http://localhost:8081/operator/cancel",sms)
+  }
   
 }

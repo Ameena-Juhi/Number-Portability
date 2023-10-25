@@ -1,24 +1,24 @@
 import { Component } from '@angular/core';
-import { PortingService } from '../porting.service';
-import { CafDTO } from '../cafDTO';
-import { RequestDTO } from '../RequestDTO';
 import { MsgDTO } from '../MsgDTO';
+import { PortingService } from '../porting.service';
 
 @Component({
-  selector: 'app-porting',
-  templateUrl: './porting.component.html',
-  styleUrls: ['./porting.component.css']
+  selector: 'app-cancel',
+  templateUrl: './cancel.component.html',
+  styleUrls: ['./cancel.component.css']
 })
-export class PortingComponent {
+export class CancelComponent {
+
   sms: MsgDTO = {message:''};
   response: MsgDTO = {message:''};
 
   constructor(private portingService : PortingService) { }
 
-  retrieveMobileNumber() {
+  cancelPortRequest() {
     if (this.sms) {
-        this.portingService.getUpc(this.sms).subscribe((result:MsgDTO) => {this.response = result;
-        this.sms.message='';},
+        this.portingService.cancelRequest(this.sms).subscribe((result:MsgDTO) => {this.response = result;
+          this.sms.message='';
+        },
         (error) => {
           console.error('Error:', error);
           this.response = { message: 'Error occurred while processing the request.' };
@@ -28,6 +28,4 @@ export class PortingComponent {
       this.response = { message: 'No SMS entered.' };
     }
   }
-
-
 }

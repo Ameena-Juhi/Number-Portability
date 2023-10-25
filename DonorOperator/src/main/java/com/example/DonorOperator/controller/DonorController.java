@@ -31,7 +31,7 @@ import com.example.DonorOperator.service.RejectionPortService;
 import com.example.DonorOperator.service.SubscriberDetailsService;
 
 @RestController
-@CrossOrigin(origins = { "http://localhost:59904/", "http://localhost:4200" })
+@CrossOrigin(origins = { "http://localhost:50331/", "http://localhost:4200" })
 @RequestMapping("/operator")
 public class DonorController {
 
@@ -59,6 +59,9 @@ public class DonorController {
     @Autowired
     private RejectionPortService rejectionPortService;
 
+    @Autowired
+    private CancelRequestService cancelRequestService;
+
     @GetMapping("/get")
     public List<MobileNumber> getMobNums() {
         return mobileNumberRepository.findAll();
@@ -71,7 +74,7 @@ public class DonorController {
 
     @PostMapping("/passedcaf")
     public boolean sendCAFToDonor(@RequestBody CAFdto form) {
-        System.out.println("pssedcaf");
+
         boolean identityVerification = forwardedReqService.saveCAFDTO(form);
         ValidationClearanceDTO clearancedto = new ValidationClearanceDTO();
         clearancedto.setMobileNumber(form.getMobileNumber());
@@ -145,10 +148,14 @@ public class DonorController {
         return subscriberDetailsService.getAllDetails();
     }
 
-    // afterForward Request before SchedulePortTime
     @PostMapping("/rejectDO")
     public MessageDTO cancelRequest(@RequestBody MessageDTO mobileNumber) {
         return rejectionPortService.processRejection(mobileNumber);
+    }
+
+    @PostMapping("/cancel")
+    public MessageDTO cancelPorting(@RequestBody MessageDTO sms) throws ResourceNotFoundException {
+        return cancelRequestService.cancelRequest(sms);
     }
 
 }
