@@ -11,34 +11,36 @@ import { SubDetailsDto } from './SubDetailsDto';
 })
 export class PortingService {
 
+  private recipientURL = 'http://localhost:8071/request/';
+
   constructor(private http : HttpClient) { }
 
   getUpc(Caf : CAF) : Observable<void>{
-    return this.http.post<void>("http://localhost:8082/request/portin",Caf);
+    return this.http.post<void>(`${this.recipientURL}portin`,Caf);
   }
 
   getAllPortingRquests(): Observable<CAF[]>{
-    return this.http.get<CAF[]>("http://localhost:8082/request/allrequests");
+    return this.http.get<CAF[]>(`${this.recipientURL}allrequests`);
   }
 
   saveActivationReq(activationRequest:RequestDTO ):Observable<void>{
-    return this.http.post<void>("http://localhost:8082/request/saveRequest",activationRequest);
+    return this.http.post<void>(`${this.recipientURL}saveRequest`,activationRequest);
   }
 
   getAllActivationReq():Observable<RequestDTO[]>{
-    return this.http.get<RequestDTO[]>("http://localhost:8082/request/activationRequests");
+    return this.http.get<RequestDTO[]>(`${this.recipientURL}activationRequests`);
   }
 
   getRequestActivation(request: RequestDTO): Observable<messageDTO>{
-    return this.http.post<messageDTO>("http://localhost:8082/request/activation",request);
+    return this.http.post<messageDTO>(`${this.recipientURL}activation`,request);
   }
 
   getSubDetails():Observable<SubDetailsDto[]>{
-    return this.http.get<SubDetailsDto[]>("http://localhost:8082/request/getSubscribers");
+    return this.http.get<SubDetailsDto[]>(`${this.recipientURL}getSubscribers`);
   }
 
   cancelRequest(mobileNumber:messageDTO):Observable<messageDTO>{
-    return this.http.post<messageDTO>("http://localhost:8082/request/cancelRO",mobileNumber);
+    return this.http.post<messageDTO>(`${this.recipientURL}cancelRO`,mobileNumber);
   }
 
 }

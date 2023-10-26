@@ -41,7 +41,7 @@ public class DeactivationService {
         return deactivationReqRepo.findAll();
     }
 
-    public MessageDTO acceptDeactivation(ActivationRequestDTO deactivationRequest) {
+    public MessageDTO acceptDeactivation(String authorizationHeader, ActivationRequestDTO deactivationRequest) {
         MessageDTO messageDTO = new MessageDTO();
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDateTime scheduledTime = deactivationRequest.getActivationTime();
@@ -58,7 +58,7 @@ public class DeactivationService {
             numbersPortingRepository.delete(numbersPortingEntry);
             mobileNumberRepository.delete(mobileEntry);
 
-            this.clearanceClient.setDeactivationClearance(clearance);
+            this.clearanceClient.setDeactivationClearance(authorizationHeader, clearance);
             messageDTO.setMessage("Mobile number deleted successfully."); // Set the appropriate success message
         } else {
             messageDTO.setMessage("Deactivation Time not yet reached!/Already deactivated your account");

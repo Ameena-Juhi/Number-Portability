@@ -1,19 +1,17 @@
 package com.example.MNPSP.controller;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.logging.Logger;
-
 import com.example.MNPSP.DTO.CAFdto;
+import com.example.MNPSP.DTO.CAFtoken;
 import com.example.MNPSP.DTO.MessageDTO;
 import com.example.MNPSP.DTO.PortingStatusDTO;
 import com.example.MNPSP.DTO.ValidationClearanceDTO;
@@ -23,9 +21,6 @@ import com.example.MNPSP.service.CancelRequestService;
 import com.example.MNPSP.service.FinalClearanceService;
 import com.example.MNPSP.service.NumberPortabilityDBService;
 
-import feign.FeignException;
-
-@CrossOrigin
 @RestController
 @RequestMapping("/mnpsp")
 public class MNPSPController {
@@ -57,25 +52,29 @@ public class MNPSPController {
     }
 
     @PostMapping("/processform")
-    public boolean processForm(@RequestBody CAFdto form) {
+    public boolean processForm(@RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody CAFtoken form) {
         System.out.println("processform");
-        return this.forwardform.sendCAFToDonor(form);
+        return this.forwardform.sendCAFToDonor(authorizationHeader, form);
 
     }
 
     @PostMapping("/storeIdentityClearance")
-    public boolean storeIdentityClearance(@RequestBody ValidationClearanceDTO IdentityClearance) {
+    public boolean storeIdentityClearance(
+            @RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody ValidationClearanceDTO IdentityClearance) {
 
         boolean clearance = numPortDBService.storeIdentityClearance(IdentityClearance);
         ValidationClearanceDTO clearancedto = new ValidationClearanceDTO();
         clearancedto.setMobileNumber(IdentityClearance.getMobileNumber());
         clearancedto.setValidationClearance(clearance);
-        this.activationClient.storeIdentityClearance(clearancedto);
+        this.activationClient.storeIdentityClearance(authorizationHeader, clearancedto);
         return clearance;
     }
 
     @PostMapping("/storeClearance")
-    public void storeClearance(@RequestBody ValidationClearanceDTO validationClearanceDTO) {
+    public void storeClearance(@RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody ValidationClearanceDTO validationClearanceDTO) {
         numPortDBService.storeDonorClearance(validationClearanceDTO);
     }
 
@@ -90,17 +89,22 @@ public class MNPSPController {
     }
 
     @PostMapping("/deactivationClearance")
-    public void setDeactivationClearance(@RequestBody ValidationClearanceDTO deactivationClearance) {
+    public void setDeactivationClearance(
+            @RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody ValidationClearanceDTO deactivationClearance) {
         finalClearanceService.setDonorClearance(deactivationClearance);
     }
 
     @PostMapping("/activationClearance")
-    public void setActivationClearance(@RequestBody ValidationClearanceDTO activationClearance) {
+    public void setActivationClearance(
+            @RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody ValidationClearanceDTO activationClearance) {
         finalClearanceService.setRecipientClearance(activationClearance);
     }
 
     @PostMapping("/updateNumDb")
-    public boolean updateNumDB(@RequestBody MessageDTO MobileNumber) {
+    public boolean updateNumDB(@RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody MessageDTO MobileNumber) {
         return numPortDBService.updatePortabilityDB(MobileNumber);
     }
 

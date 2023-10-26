@@ -9,12 +9,6 @@ import { Router } from '@angular/router';
 import { user } from './user';
 import { tokendto } from './tokendto';
 
-
-
- 
-
- 
-
 @Injectable({
 
     providedIn: 'root',
@@ -39,10 +33,8 @@ export class AuthService {
         localStorage.setItem('token', tokenDto.token);
     }
 
- 
-
     getToken(): string | null {
-        return localStorage.getItem('token'); // Use the authToken property if available
+        return localStorage.getItem('token'); 
     }
  
 

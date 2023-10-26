@@ -9,13 +9,15 @@ import { messageDTO } from './messageDTO';
 })
 export class DonorService {
 
+  private operatorURL = "http://localhost:8071/operator/";
+
   constructor(private http: HttpClient) { }
 
   saveDeactivationReq(deactivationRequest:RequestDTO ):Observable<void>{
-    return this.http.post<void>("http://localhost:8081/operator/saveRequest",deactivationRequest);
+    return this.http.post<void>(`${this.operatorURL}saveRequest`,deactivationRequest);
   }
 
   cancelDO(mobileNumber:messageDTO):Observable<messageDTO>{
-    return this.http.post<messageDTO>("http://localhost:8081/operator/rejectDO",mobileNumber);
+    return this.http.post<messageDTO>(`${this.operatorURL}rejectDO`,mobileNumber);
   }
 }

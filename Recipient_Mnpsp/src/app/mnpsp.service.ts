@@ -5,47 +5,50 @@ import { messageDTO } from './messageDTO';
 import { status } from './status';
 import { validationClearancedto } from './ValidationClearancedto';
 import { CAF } from './CAF';
+import { CAFtoken } from './CAFtoken';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MNPSPService {
 
+  private mnpspURL = 'http://localhost:8071/mnpsp/';
+
   constructor(private http : HttpClient) { }
 
   Validate(form : CAF) : Observable<messageDTO>{
-    return this.http.post<messageDTO>(`http://localhost:8083/mnpsp/sendcaf`,form);
+    return this.http.post<messageDTO>(`${this.mnpspURL}sendcaf`,form);
   }
 
   scheduleTime(mobNum: messageDTO):Observable<Date>{
-    return this.http.post<Date>("http://localhost:8083/mnpsp/scheduleport",mobNum);
+    return this.http.post<Date>(`${this.mnpspURL}scheduleport`,mobNum);
   }
 
   getAllStatus(): Observable<status[]>{
-    return this.http.get<status[]>("http://localhost:8083/mnpsp/all");
+    return this.http.get<status[]>("http://localhost:8071/mnpsp/all");
   }
 
-  processToDonor(form: CAF):Observable<boolean>{
-    return this.http.post<boolean>("http://localhost:8083/mnpsp/processform",form);
+  processToDonor(form: CAFtoken):Observable<boolean>{
+    return this.http.post<boolean>(`${this.mnpspURL}processform`,form);
   }
 
   getClearance(mobNum:messageDTO):Observable<boolean>{
-    return this.http.post<boolean>("http://localhost:8083/mnpsp/getClearance",mobNum);
+    return this.http.post<boolean>(`${this.mnpspURL}getClearance`,mobNum);
   }
 
   getDonorClearance(clearance:validationClearancedto):Observable<void>{
-    return this.http.post<void>("http://localhost:8083/mnpsp/deactivationClearance",clearance);
+    return this.http.post<void>(`${this.mnpspURL}deactivationClearance`,clearance);
   }
 
   getRecipientClearance(clearance:validationClearancedto):Observable<void>{
-    return this.http.post<void>("http://localhost:8083/mnpsp/activationClearance",clearance);
+    return this.http.post<void>(`${this.mnpspURL}activationClearance`,clearance);
   }
 
   updateNumDB(mobileNumber: messageDTO):Observable<boolean>{
-    return this.http.post<boolean>("http://localhost:8083/mnpsp/updateNumDb",mobileNumber);
+    return this.http.post<boolean>(`${this.mnpspURL}updateNumDb`,mobileNumber);
   }
 
   cancelReqMNPSP(mobileNumber:messageDTO):Observable<messageDTO>{
-    return this.http.post<messageDTO>("http://localhost:8083/mnpsp/cancelMNPSP",mobileNumber);
+    return this.http.post<messageDTO>(`${this.mnpspURL}cancelMNPSP`,mobileNumber);
   }
 }

@@ -12,35 +12,36 @@ import { CafDTO } from './cafDTO';
 })
 export class PortingService {
 
+  private operatorURL = 'http://localhost:8071/operator/';
+
   constructor(private http : HttpClient) { }
 
   getUpc(sms : MsgDTO) : Observable<MsgDTO>{
-
-    return this.http.post<MsgDTO>("http://localhost:8081/subscriber/port",sms);
+    return this.http.post<MsgDTO>("http://localhost:8071/subscriber/port",sms);
   }
 
   getAllRequests():Observable<CafDTO[]>{
-    return this.http.get<CafDTO[]>("http://localhost:8081/operator/getRequests");
+    return this.http.get<CafDTO[]>(`${this.operatorURL}getRequests`);
   }
 
   validate(form : CafDTO): Observable<MsgDTO>{
-    return this.http.post<MsgDTO>("http://localhost:8081/operator/validate",form);
+    return this.http.post<MsgDTO>(`${this.operatorURL}validate`,form);
   }
 
   getAllDeactReqs():Observable<RequestDTOLocale[]>{
-    return this.http.get<RequestDTOLocale[]>("http://localhost:8081/operator/allDeactReqs");
+    return this.http.get<RequestDTOLocale[]>(`${this.operatorURL}allDeactReqs`);
   }
 
   requestDeactivation(request : RequestDTOLocale): Observable<MsgDTO>{
-    return this.http.post<MsgDTO>("http://localhost:8081/operator/deactivation",request);
+    return this.http.post<MsgDTO>(`${this.operatorURL}deactivation`,request);
   }
 
   getSubscribers():Observable<SubDetailsDto[]>{
-    return this.http.get<SubDetailsDto[]>("http://localhost:8081/operator/getSubscribers");
+    return this.http.get<SubDetailsDto[]>(`${this.operatorURL}getSubscribers`);
   }
 
   cancelRequest(sms:MsgDTO):Observable<MsgDTO>{
-    return this.http.post<MsgDTO>("http://localhost:8081/subscriber/cancel",sms)
+    return this.http.post<MsgDTO>("http://localhost:8071/subscriber/cancel",sms)
   }
   
 }

@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.DonorOperator.DTO.ActivationRequestDTO;
 import com.example.DonorOperator.DTO.CAFdto;
+import com.example.DonorOperator.DTO.CAFtoken;
 import com.example.DonorOperator.DTO.MessageDTO;
 import com.example.DonorOperator.DTO.SubDetailsDTO;
 import com.example.DonorOperator.DTO.ValidationClearanceDTO;
+import com.example.DonorOperator.DTO.ValidationClearancetoken;
 import com.example.DonorOperator.FeignClient.ClearanceClient;
 import com.example.DonorOperator.entity.DeactivationRequest;
 import com.example.DonorOperator.entity.ForwardedRequests;
@@ -29,8 +31,6 @@ import com.example.DonorOperator.service.RejectionPortService;
 import com.example.DonorOperator.service.SubscriberDetailsService;
 
 @RestController
-// @CrossOrigin(origins = { "http://localhost:50331/", "http://localhost:4200"
-// })
 @RequestMapping("/operator")
 public class DonorController {
 
@@ -66,13 +66,15 @@ public class DonorController {
     }
 
     @PostMapping("/passedcaf")
-    public boolean sendCAFToDonor(@RequestBody CAFdto form) {
+    public boolean sendCAFToDonor(@RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody CAFtoken form) {
 
         boolean identityVerification = forwardedReqService.saveCAFDTO(form);
-        ValidationClearanceDTO clearancedto = new ValidationClearanceDTO();
+        ValidationClearancetoken clearancedto = new ValidationClearancetoken();
         clearancedto.setMobileNumber(form.getMobileNumber());
         clearancedto.setValidationClearance(identityVerification);
-        this.clearanceClient.storeIdentityClearance(clearancedto);
+        clearancedto.setToken(form.getToken());
+        this.clearanceClient.storeIdentityClearance(authorizationHeader, clearancedto);
         return identityVerification;
     }
 
@@ -82,7 +84,9 @@ public class DonorController {
     }
 
     @PostMapping("/validate")
-    public MessageDTO respondToPortingRequest(@RequestBody CAFdto form) throws ResourceNotFoundException {
+    public MessageDTO respondToPortingRequest(
+            @RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody CAFdto form) throws ResourceNotFoundException {
         MessageDTO msg = new MessageDTO();
         boolean clearance;
         List<String> errorMessages = new ArrayList<>();
@@ -116,7 +120,7 @@ public class DonorController {
         ValidationClearanceDTO clearancedto = new ValidationClearanceDTO();
         clearancedto.setMobileNumber(form.getMobileNumber());
         clearancedto.setValidationClearance(clearance);
-        this.clearanceClient.storeClearance(clearancedto);
+        this.clearanceClient.storeClearance(authorizationHeader, clearancedto);
         msg.setMessage("Successfully validated!");
         return msg;
     }
@@ -132,8 +136,10 @@ public class DonorController {
     }
 
     @PostMapping("/deactivation")
-    public MessageDTO deactivateMobileNumber(@RequestBody ActivationRequestDTO deactivationRequest) {
-        return deactivationService.acceptDeactivation(deactivationRequest);
+    public MessageDTO deactivateMobileNumber(
+            @RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody ActivationRequestDTO deactivationRequest) {
+        return deactivationService.acceptDeactivation(authorizationHeader, deactivationRequest);
     }
 
     @GetMapping("/getSubscribers")
@@ -142,7 +148,8 @@ public class DonorController {
     }
 
     @PostMapping("/rejectDO")
-    public MessageDTO cancelRequest(@RequestBody MessageDTO mobileNumber) {
+    public MessageDTO cancelRequest(@RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody MessageDTO mobileNumber) {
         return rejectionPortService.processRejection(mobileNumber);
     }
 

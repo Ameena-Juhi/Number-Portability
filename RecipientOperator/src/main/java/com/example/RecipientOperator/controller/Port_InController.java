@@ -3,10 +3,10 @@ package com.example.RecipientOperator.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,9 +14,9 @@ import com.example.RecipientOperator.DTO.ActivationRequestDTO;
 import com.example.RecipientOperator.DTO.MessageDTO;
 import com.example.RecipientOperator.DTO.SubDetailsDTO;
 import com.example.RecipientOperator.DTO.ValidationClearanceDTO;
+import com.example.RecipientOperator.DTO.ValidationClearancetoken;
 import com.example.RecipientOperator.entity.ActivationRequest;
 import com.example.RecipientOperator.entity.CustomerAcquisitionForm;
-import com.example.RecipientOperator.feignClient.CAFClient;
 import com.example.RecipientOperator.service.ActivationService;
 import com.example.RecipientOperator.service.CAFClientService;
 import com.example.RecipientOperator.service.CancelRequestService;
@@ -24,7 +24,6 @@ import com.example.RecipientOperator.service.CustomerAcquisitionFormService;
 import com.example.RecipientOperator.service.ResourceNotFoundException;
 import com.example.RecipientOperator.service.SubscriberDetailsService;
 
-// @CrossOrigin
 @RestController
 @RequestMapping("/request")
 public class Port_InController {
@@ -45,7 +44,8 @@ public class Port_InController {
     private CAFClientService cafClientService;
 
     @GetMapping("/allrequests")
-    public List<CustomerAcquisitionForm> getAllRequests() {
+    public List<CustomerAcquisitionForm> getAllRequests(
+            @RequestHeader(value = "Authorization", required = true) String authorizationHeader) {
         return CAFService.getAllRequests();
     }
 
@@ -65,14 +65,15 @@ public class Port_InController {
     }
 
     @PostMapping("/checkidentity")
-    public boolean storeIdentityClearance(@RequestBody ValidationClearanceDTO IdentityClearanceDTO) {
+    public boolean storeIdentityClearance(@RequestBody ValidationClearancetoken IdentityClearanceDTO) {
         System.out.println("checkidentity");
         return this.cafClientService.storeIdentityClearance(IdentityClearanceDTO);
     }
 
     @PostMapping("/activation")
-    public MessageDTO addSubscriber(@RequestBody ActivationRequestDTO activationRequest) {
-        return activationService.acceptRequest(activationRequest);
+    public MessageDTO addSubscriber(@RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody ActivationRequestDTO activationRequest) {
+        return activationService.acceptRequest(authorizationHeader, activationRequest);
     }
 
     @GetMapping("/getSubscribers")
@@ -81,7 +82,9 @@ public class Port_InController {
     }
 
     @PostMapping("/cancelRO")
-    public MessageDTO cancellationRequest(@RequestBody MessageDTO mobileNumber) throws ResourceNotFoundException {
+    public MessageDTO cancellationRequest(
+            @RequestHeader(value = "Authorization", required = true) String authorizationHeader,
+            @RequestBody MessageDTO mobileNumber) throws ResourceNotFoundException {
         return cancelRequestService.cancelRequest(mobileNumber);
     }
 

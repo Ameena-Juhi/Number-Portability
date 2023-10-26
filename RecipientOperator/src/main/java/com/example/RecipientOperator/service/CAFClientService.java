@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.RecipientOperator.DTO.CAFdto;
 import com.example.RecipientOperator.DTO.MessageDTO;
 import com.example.RecipientOperator.DTO.ValidationClearanceDTO;
+import com.example.RecipientOperator.DTO.ValidationClearancetoken;
 import com.example.RecipientOperator.entity.CustomerAcquisitionForm;
 import com.example.RecipientOperator.feignClient.CAFClient;
 import com.example.RecipientOperator.repository.CustomerAcquisitionFormRepository;
@@ -36,7 +37,7 @@ public class CAFClientService {
 
     }
 
-    public boolean storeIdentityClearance(ValidationClearanceDTO IdentityClearance) {
+    public boolean storeIdentityClearance(ValidationClearancetoken IdentityClearance) {
         System.out.println("storeIdeCl");
         String mobileNumber = IdentityClearance.getMobileNumber();
         Optional<CustomerAcquisitionForm> form = formRepository.findByMobileNumber(mobileNumber);

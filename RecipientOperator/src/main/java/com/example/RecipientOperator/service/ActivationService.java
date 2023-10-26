@@ -50,17 +50,19 @@ public class ActivationService {
         return activationReqRepo.findAll();
     }
 
-    public MessageDTO acceptRequest(ActivationRequestDTO activationRequest) {
+    public MessageDTO acceptRequest(String authorizationHeader, ActivationRequestDTO activationRequest) {
         MessageDTO messageDTO = new MessageDTO();
         LocalDateTime currentDateTime = LocalDateTime.now();
-    
+
         LocalDateTime activationTime = activationRequest.getActivationTime();
         if (currentDateTime.isAfter(activationTime)) {
-            Optional<MobileNumber> optionalMobileNumber = mobileNumberRepository.findByMobileNumber(activationRequest.getMobileNumber());
+            Optional<MobileNumber> optionalMobileNumber = mobileNumberRepository
+                    .findByMobileNumber(activationRequest.getMobileNumber());
             if (optionalMobileNumber.isPresent()) {
                 messageDTO.setMessage("Already Added successfully!");
             } else {
-                Optional<CustomerAcquisitionForm> optionalCustomerDetails = customerAcquisitionFormRepository.findByMobileNumber(activationRequest.getMobileNumber());
+                Optional<CustomerAcquisitionForm> optionalCustomerDetails = customerAcquisitionFormRepository
+                        .findByMobileNumber(activationRequest.getMobileNumber());
                 if (optionalCustomerDetails.isPresent()) {
                     CustomerAcquisitionForm customerDetails = optionalCustomerDetails.get();
                     MobileNumber mobileNumber = new MobileNumber();
@@ -75,7 +77,7 @@ public class ActivationService {
                     ValidationClearanceDTO clearanceDto = new ValidationClearanceDTO();
                     clearanceDto.setMobileNumber(activationRequest.getMobileNumber());
                     clearanceDto.setValidationClearance(true);
-                    this.cafClient.setActivationClearance(clearanceDto);
+                    this.cafClient.setActivationClearance(authorizationHeader, clearanceDto);
                     messageDTO.setMessage("Mobile number added successfully.");
                 } else {
                     messageDTO.setMessage("Customer details not found!");
@@ -84,8 +86,8 @@ public class ActivationService {
         } else {
             messageDTO.setMessage("Activation Time not yet reached!");
         }
-    
+
         return messageDTO;
     }
-    
+
 }

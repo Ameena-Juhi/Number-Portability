@@ -6,6 +6,7 @@ import { StatusCheckComponent } from './status-check/status-check.component';
 import { MnpspValidationComponent } from './mnpsp-validation/mnpsp-validation.component';
 import { ActivationComponent } from './activation/activation.component';
 import { SubscribersComponent } from './subscribers/subscribers.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {path : '', component:PortInComponent},
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'status', component:StatusCheckComponent},
   { path: 'mnpsp',component:MnpspValidationComponent},
   { path:'activate',component:ActivationComponent},
-  { path:'subscribers',component:SubscribersComponent}
+  { path:'subscribers',component:SubscribersComponent},
+  { path: 'login', component:LoginComponent}
 
 ];
 

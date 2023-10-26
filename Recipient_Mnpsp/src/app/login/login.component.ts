@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../auth.service';
 import { user } from '../user';
+import { AuthService } from '../auth.service';
 import { tokendto } from '../tokendto';
 
 @Component({
@@ -8,6 +8,7 @@ import { tokendto } from '../tokendto';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent {
 
   currentuser:user = {username:'',password:''};

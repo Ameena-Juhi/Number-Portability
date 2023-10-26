@@ -6,6 +6,7 @@ import { RequestDTO } from '../RequestDTO';
 import { DonorService } from '../donor.service';
 import { validationClearancedto } from '../ValidationClearancedto';
 import { CAF } from '../CAF';
+import { CAFtoken } from '../CAFtoken';
 
 @Component({
   selector: 'app-mnpsp-validation',
@@ -22,6 +23,16 @@ export class MnpspValidationComponent implements OnInit {
   inputMobNum: messageDTO = { message: '' };
   request: RequestDTO = { mobileNumber: '', activationTime: new Date('2024-01-01') };
   clearance : validationClearancedto = {mobileNumber:'',validationClearance:false};
+  tokenForm:CAFtoken={
+    name: '',
+    address: '',
+    mobileNumber: '',
+    upc: '',
+    clearance: false,
+    token: ''
+  };
+
+token:string| null = localStorage.getItem('token');
 
   constructor(
     private mnpspService: MNPSPService,
@@ -44,7 +55,13 @@ export class MnpspValidationComponent implements OnInit {
   }
 
   forwardForm(form: CAF) {
-    this.mnpspService.processToDonor(form).subscribe((res: boolean) => {
+    this.tokenForm.name = form.name;
+    this.tokenForm.address = form.address;
+    this.tokenForm.mobileNumber = form.mobileNumber;
+    this.tokenForm.upc = form.upc;
+    this.tokenForm.clearance = form.clearance;
+    this.tokenForm.token = this.token || '';
+    this.mnpspService.processToDonor(this.tokenForm).subscribe((res: boolean) => {
       let message = res ? 'Request forwarded to Donor Operator successfully!' : 'Unsuccessful!';
         alert(message);
     
