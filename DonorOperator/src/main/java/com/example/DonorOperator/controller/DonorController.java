@@ -22,24 +22,20 @@ import com.example.DonorOperator.entity.ForwardedRequests;
 import com.example.DonorOperator.entity.MobileNumber;
 import com.example.DonorOperator.exception.ResourceNotFoundException;
 import com.example.DonorOperator.repository.MobileNumberRepository;
-import com.example.DonorOperator.service.CancelRequestService;
 import com.example.DonorOperator.service.DeactivationService;
 import com.example.DonorOperator.service.ForwardedReqService;
-import com.example.DonorOperator.service.MobileNumberService;
 import com.example.DonorOperator.service.PortingVerificationService;
 import com.example.DonorOperator.service.RejectionPortService;
 import com.example.DonorOperator.service.SubscriberDetailsService;
 
 @RestController
-@CrossOrigin(origins = { "http://localhost:50331/", "http://localhost:4200" })
+// @CrossOrigin(origins = { "http://localhost:50331/", "http://localhost:4200"
+// })
 @RequestMapping("/operator")
 public class DonorController {
 
     @Autowired
     private MobileNumberRepository mobileNumberRepository;
-
-    @Autowired
-    private MobileNumberService mobileNumberService;
 
     @Autowired
     private PortingVerificationService portingVerificationService;
@@ -59,17 +55,14 @@ public class DonorController {
     @Autowired
     private RejectionPortService rejectionPortService;
 
-    @Autowired
-    private CancelRequestService cancelRequestService;
+    @GetMapping("/hello")
+    public String sayHello() {
+        return "hello";
+    }
 
     @GetMapping("/get")
     public List<MobileNumber> getMobNums() {
         return mobileNumberRepository.findAll();
-    }
-
-    @PostMapping("/port")
-    public MessageDTO portingSMS(@RequestBody MessageDTO sms) throws ResourceNotFoundException {
-        return mobileNumberService.retrieveMobileNumber(sms);
     }
 
     @PostMapping("/passedcaf")
@@ -151,11 +144,6 @@ public class DonorController {
     @PostMapping("/rejectDO")
     public MessageDTO cancelRequest(@RequestBody MessageDTO mobileNumber) {
         return rejectionPortService.processRejection(mobileNumber);
-    }
-
-    @PostMapping("/cancel")
-    public MessageDTO cancelPorting(@RequestBody MessageDTO sms) throws ResourceNotFoundException {
-        return cancelRequestService.cancelRequest(sms);
     }
 
 }

@@ -10,6 +10,7 @@ import { ValidateRequestsComponent } from './validate-requests/validate-requests
 import { DeactivationComponent } from './deactivation/deactivation.component';
 import { SubscribersComponent } from './subscribers/subscribers.component';
 import { CancelComponent } from './cancel/cancel.component';
+import { LoginComponent } from './login/login.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,7 +18,8 @@ import { CancelComponent } from './cancel/cancel.component';
     ValidateRequestsComponent,
     DeactivationComponent,
     SubscribersComponent,
-    CancelComponent
+    CancelComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

@@ -65,7 +65,7 @@ public class MNPSPController {
 
     @PostMapping("/storeIdentityClearance")
     public boolean storeIdentityClearance(@RequestBody ValidationClearanceDTO IdentityClearance) {
-        System.out.println("storeidentitycl");
+
         boolean clearance = numPortDBService.storeIdentityClearance(IdentityClearance);
         ValidationClearanceDTO clearancedto = new ValidationClearanceDTO();
         clearancedto.setMobileNumber(IdentityClearance.getMobileNumber());

@@ -5,13 +5,15 @@ import { ValidateRequestsComponent } from './validate-requests/validate-requests
 import { DeactivationComponent } from './deactivation/deactivation.component';
 import { SubscribersComponent } from './subscribers/subscribers.component';
 import { CancelComponent } from './cancel/cancel.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {path:'',component:PortingComponent},
   {path:'validate',component:ValidateRequestsComponent},
   {path:'deactivate',component:DeactivationComponent},
   { path:'subscribers', component:SubscribersComponent},
-  { path: 'cancel', component:CancelComponent}
+  { path: 'cancel', component:CancelComponent},
+  { path:'login',component:LoginComponent}
 ];
 
 @NgModule({

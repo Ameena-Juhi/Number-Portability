@@ -16,7 +16,7 @@ export class PortingService {
 
   getUpc(sms : MsgDTO) : Observable<MsgDTO>{
 
-    return this.http.post<MsgDTO>("http://localhost:8081/operator/port",sms);
+    return this.http.post<MsgDTO>("http://localhost:8081/subscriber/port",sms);
   }
 
   getAllRequests():Observable<CafDTO[]>{
@@ -40,7 +40,7 @@ export class PortingService {
   }
 
   cancelRequest(sms:MsgDTO):Observable<MsgDTO>{
-    return this.http.post<MsgDTO>("http://localhost:8081/operator/cancel",sms)
+    return this.http.post<MsgDTO>("http://localhost:8081/subscriber/cancel",sms)
   }
   
 }

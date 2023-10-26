@@ -24,7 +24,7 @@ import com.example.RecipientOperator.service.CustomerAcquisitionFormService;
 import com.example.RecipientOperator.service.ResourceNotFoundException;
 import com.example.RecipientOperator.service.SubscriberDetailsService;
 
-@CrossOrigin
+// @CrossOrigin
 @RestController
 @RequestMapping("/request")
 public class Port_InController {
