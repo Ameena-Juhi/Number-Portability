@@ -70,10 +70,10 @@ public class DonorController {
             @RequestBody CAFtoken form) {
 
         boolean identityVerification = forwardedReqService.saveCAFDTO(form);
-        ValidationClearancetoken clearancedto = new ValidationClearancetoken();
+        ValidationClearanceDTO clearancedto = new ValidationClearanceDTO();
         clearancedto.setMobileNumber(form.getMobileNumber());
         clearancedto.setValidationClearance(identityVerification);
-        clearancedto.setToken(form.getToken());
+        // clearancedto.setToken(form.getToken());
         this.clearanceClient.storeIdentityClearance(authorizationHeader, clearancedto);
         return identityVerification;
     }

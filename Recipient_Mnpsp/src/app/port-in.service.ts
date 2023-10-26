@@ -23,6 +23,10 @@ export class PortingService {
     return this.http.get<CAF[]>(`${this.recipientURL}allrequests`);
   }
 
+  getIdentityClearance(mobNum:messageDTO):Observable<boolean>{
+    return this.http.post<boolean>(`${this.recipientURL}getIdentity`,mobNum);
+  }
+
   saveActivationReq(activationRequest:RequestDTO ):Observable<void>{
     return this.http.post<void>(`${this.recipientURL}saveRequest`,activationRequest);
   }

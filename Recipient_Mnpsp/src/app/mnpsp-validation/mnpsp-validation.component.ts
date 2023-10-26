@@ -62,7 +62,7 @@ token:string| null = localStorage.getItem('token');
     this.tokenForm.clearance = form.clearance;
     this.tokenForm.token = this.token || '';
     this.mnpspService.processToDonor(this.tokenForm).subscribe((res: boolean) => {
-      let message = res ? 'Request forwarded to Donor Operator successfully!' : 'Unsuccessful!';
+      let message = res ? 'Request forwarded to Donor Operator successfully!' : 'Unsuccessful due to name/address mismatch!';
         alert(message);
     
     });
@@ -100,6 +100,12 @@ token:string| null = localStorage.getItem('token');
       }
     );
   }
+
+  updatedb(form: CAF) {
+    this.inputMobNum.message = this.form.mobileNumber;
+    this.mnpspService.updateNumDB(this.inputMobNum).subscribe();
+  }
+  
 
     
 }

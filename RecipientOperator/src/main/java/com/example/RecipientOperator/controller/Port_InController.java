@@ -70,6 +70,11 @@ public class Port_InController {
         return this.cafClientService.storeIdentityClearance(IdentityClearanceDTO);
     }
 
+    @PostMapping("/getIdentity")
+    public boolean getIdentityClearance(@RequestBody MessageDTO mobNum) {
+        return this.CAFService.getIdentityClearance(mobNum);
+    }
+
     @PostMapping("/activation")
     public MessageDTO addSubscriber(@RequestHeader(value = "Authorization", required = true) String authorizationHeader,
             @RequestBody ActivationRequestDTO activationRequest) {

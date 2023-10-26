@@ -16,6 +16,13 @@ export class MNPSPComponent {
   caf : CAF[] =[];
   response: messageDTO = { message: '' }; 
   inputNumber : messageDTO = {message:''};
+  form:CAF={
+    name: '',
+    address: '',
+    mobileNumber: '',
+    upc: '',
+    clearance: false
+  };
   responses : String[] = [];
 
   constructor(private mnpspService : MNPSPService,
@@ -24,6 +31,7 @@ export class MNPSPComponent {
 
   ngOnInit(): void {
     this.portinService.getAllPortingRquests().subscribe(res => this.caf = res);
+    this.getIdentity(this.form);
   }
   
   getValidation(form: CAF): void {
@@ -37,6 +45,26 @@ export class MNPSPComponent {
       }
     );
   }
+
+  identityResponse: string = '';
+
+  getIdentity(form: CAF) {
+    this.inputNumber.message = form.mobileNumber;
+    this.portinService.getIdentityClearance(this.inputNumber).subscribe(
+      (res: boolean) => {
+        if (!res) {
+          this.identityResponse = 'Unsuccessful due to name/address mismatch!';
+          console.log(this.identityResponse);
+        } else {
+          this.identityResponse = '';
+        }
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+  }
+  
 
   cancelTheRequest(form: CAF) {
     this.inputNumber.message = form.mobileNumber;
