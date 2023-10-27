@@ -1,11 +1,13 @@
 package com.example.DonorOperator.service;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.DonorOperator.DTO.CAFdto;
+import com.example.DonorOperator.entity.MobileNumber;
 import com.example.DonorOperator.entity.NumbersPorting;
 import com.example.DonorOperator.entity.SubscriberDetails;
 import com.example.DonorOperator.exception.ResourceNotFoundException;
@@ -35,13 +37,12 @@ public class PortingVerificationService {
     }
 
     public SubscriberDetails getSubscriberDetails(String mobNum) throws ResourceNotFoundException {
-
-        if (mobileNumberRepository.findByMobileNumber(mobNum).isPresent()) {
-
-            Long mobileNum_id = mobileNumberRepository.findByMobileNumber(mobNum).get().getId();
-            return (subscriberDetailsRepository.findbymobilenum_id(mobileNum_id));
+        Optional<MobileNumber> optionalMobileNumber = mobileNumberRepository.findByMobileNumber(mobNum);
+        if (optionalMobileNumber.isPresent()) {
+            Long mobileNum_id = optionalMobileNumber.get().getId();
+            return subscriberDetailsRepository.findbymobilenum_id(mobileNum_id);
         }
-        throw new ResourceNotFoundException(mobNum + "is not found in DB");
+        throw new ResourceNotFoundException(mobNum + " is not found in DB");
     }
 
     public boolean checkOutstandingPayments(String mobNum) throws ResourceNotFoundException {

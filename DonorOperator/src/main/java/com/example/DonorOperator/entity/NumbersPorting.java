@@ -11,10 +11,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class NumbersPorting {
 
     @Id
@@ -22,9 +24,9 @@ public class NumbersPorting {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "mobileNumberId",referencedColumnName = "id")
+    @JoinColumn(name = "mobileNumberId", referencedColumnName = "id")
     private MobileNumber mobileNumber;
-    
+
     @Column(name = "upc", length = 8)
     private String upc;
 

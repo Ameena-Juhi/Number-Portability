@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PortingService } from '../porting.service';
-import { CafDTO } from '../cafDTO';
+import { CafDTO } from '../CafDTO';
 import { RequestDTO } from '../RequestDTO';
 import { MsgDTO } from '../MsgDTO';
 

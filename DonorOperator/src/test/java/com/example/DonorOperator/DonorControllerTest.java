@@ -1,75 +1,130 @@
-// package com.example.DonorOperator;
+package com.example.DonorOperator;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.InjectMocks;
-// import org.mockito.Mock;
-// import org.mockito.Mockito;
-// import org.mockito.MockitoAnnotations;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.http.MediaType;
-// import org.springframework.test.context.ActiveProfiles;
-// import org.springframework.test.web.servlet.MockMvc;
-// import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
-// import com.example.DonorOperator.DTO.CAFdto;
-// import com.example.DonorOperator.controller.DonorController;
-// import com.example.DonorOperator.service.MobileNumberService;
-// import com.example.DonorOperator.service.PortingVerificationService;
+import java.util.ArrayList;
+import java.util.List;
 
-// import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.example.DonorOperator.DTO.ActivationRequestDTO;
+import com.example.DonorOperator.DTO.CAFdto;
+import com.example.DonorOperator.DTO.CAFtoken;
+import com.example.DonorOperator.DTO.MessageDTO;
+import com.example.DonorOperator.entity.ForwardedRequests;
+import com.example.DonorOperator.entity.MobileNumber;
+import com.example.DonorOperator.exception.ResourceNotFoundException;
+import com.example.DonorOperator.entity.DeactivationRequest;
+import com.example.DonorOperator.service.DeactivationService;
+import com.example.DonorOperator.service.ForwardedReqService;
+import com.example.DonorOperator.service.PortingVerificationService;
+import com.example.DonorOperator.service.RejectionPortService;
+import com.example.DonorOperator.service.SubscriberDetailsService;
+import com.example.DonorOperator.FeignClient.ClearanceClient;
+import com.example.DonorOperator.controller.DonorController;
+import com.example.DonorOperator.repository.MobileNumberRepository;
 
-// import static
-// org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-// @SpringBootTest
-// @ActiveProfiles("test")
-// class DonorControllerTest {
+@ExtendWith(MockitoExtension.class)
+public class DonorControllerTest {
 
-// @InjectMocks
-// private DonorController donorController;
+    @InjectMocks
+    private DonorController donorController;
 
-// @Mock
-// private MobileNumberService mobileNumberService;
+    @Mock
+    private MobileNumberRepository mobileNumberRepository;
 
-// @Mock
-// private PortingVerificationService portingVerificationService;
+    @Mock
+    private PortingVerificationService portingVerificationService;
 
-// private MockMvc mockMvc;
+    @Mock
+    private ForwardedReqService forwardedReqService;
 
-// @BeforeEach
-// public void setup() {
+    @Mock
+    private ClearanceClient clearanceClient;
 
-// org.mockito.MockitoAnnotations.openMocks(this);
-// mockMvc = MockMvcBuilders.standaloneSetup(donorController).build();
-// }
+    @Mock
+    private DeactivationService deactivationService;
 
-// @Test
-// public void testPortingSMS() throws Exception {
-// // Mock the behavior of mobileNumberService
-// Mockito.when(mobileNumberService.retrieveMobileNumber(Mockito.anyString()))
-// .thenReturn("UniquePortingCode123");
+    @Mock
+    private SubscriberDetailsService subscriberDetailsService;
 
-// // Send a POST request to /operator/port with sample SMS content
-// mockMvc.perform(MockMvcRequestBuilders.post("/operator/port")
-// .content("Sample SMS content")
-// .contentType(MediaType.APPLICATION_JSON))
-// .andExpect(status().isOk());
-// }
+    @Mock
+    private RejectionPortService rejectionPortService;
 
-// @Test
-// public void testRespondToPortingRequest() throws Exception {
-// // Mock the behavior of portingVerificationService
-// Mockito.when(portingVerificationService.checkActivationPeriod(Mockito.anyString())).thenReturn(true);
-// Mockito.when(portingVerificationService.checkOutstandingPayments(Mockito.anyString())).thenReturn(true);
-// Mockito.when(portingVerificationService.checkUPCMismatch(Mockito.any(CAFdto.class))).thenReturn(true);
-// Mockito.when(portingVerificationService.checkUPCValidity(Mockito.anyString())).thenReturn(true);
-// Mockito.when(portingVerificationService.checkChangeOfOwnership(Mockito.anyString())).thenReturn(true);
+    @Test
+    void testSayHello() {
+        assertEquals("hello", donorController.sayHello());
+    }
 
-// // Send a POST request to /operator/request/123 with upc parameter
-// mockMvc.perform(MockMvcRequestBuilders.post("/operator/request/123")
-// .param("upc", "SampleUPC")
-// .contentType(MediaType.APPLICATION_JSON))
-// .andExpect(status().isOk());
-// }
-// }
+    @Test
+    void testGetMobNums() {
+        List<MobileNumber> mobileNumbers = new ArrayList<>();
+        when(mobileNumberRepository.findAll()).thenReturn(mobileNumbers);
+
+        assertEquals(mobileNumbers, donorController.getMobNums());
+    }
+
+    @Test
+    void testGetAllRequestsTillNow() {
+        List<ForwardedRequests> forwardedRequests = new ArrayList<>();
+        when(forwardedReqService.getAllRequests()).thenReturn(forwardedRequests);
+
+        assertEquals(forwardedRequests, donorController.getAllRequestsTillNow());
+    }
+
+    @Test
+    void testRespondToPortingRequest() throws ResourceNotFoundException {
+        CAFdto form = new CAFdto();
+        form.setMobileNumber("1234567890");
+
+        List<String> errorMessages = new ArrayList<>();
+        errorMessages.add("Activation period check failed.");
+        errorMessages.add("Outstanding payments check failed.");
+        errorMessages.add("UPC mismatch check failed.");
+        errorMessages.add("UPC validity check failed.");
+        errorMessages.add("Change of ownership check failed.");
+
+        when(portingVerificationService.checkActivationPeriod("1234567890")).thenReturn(false);
+        when(portingVerificationService.checkOutstandingPayments("1234567890")).thenReturn(false);
+        when(portingVerificationService.checkUPCMismatch(form)).thenReturn(false);
+        when(portingVerificationService.checkUPCValidity("1234567890")).thenReturn(false);
+        when(portingVerificationService.checkChangeOfOwnership("1234567890")).thenReturn(false);
+
+        MessageDTO expectedMessage = new MessageDTO();
+        expectedMessage.setMessage("Response: " + errorMessages);
+        MessageDTO actualMessage = donorController.respondToPortingRequest("AuthorizationToken", form);
+
+        assertEquals(expectedMessage.getMessage(), actualMessage.getMessage());
+    }
+
+    @Test
+    void testGetAllDeactReqs() {
+        List<DeactivationRequest> deactivationRequests = new ArrayList<>();
+        when(deactivationService.getAllDeactReqs()).thenReturn(deactivationRequests);
+
+        assertEquals(deactivationRequests, donorController.getAllDeactReqs());
+    }
+
+    @Test
+    void testDeactivateMobileNumber() {
+        ActivationRequestDTO deactivationRequest = new ActivationRequestDTO();
+        MessageDTO messageDTO = new MessageDTO();
+        when(deactivationService.acceptDeactivation("AuthorizationToken", deactivationRequest)).thenReturn(messageDTO);
+
+        assertEquals(messageDTO, donorController.deactivateMobileNumber("AuthorizationToken", deactivationRequest));
+    }
+
+    @Test
+    void testCancelRequest() {
+        MessageDTO mobileNumber = new MessageDTO();
+        MessageDTO messageDTO = new MessageDTO();
+        when(rejectionPortService.processRejection(mobileNumber)).thenReturn(messageDTO);
+
+        assertEquals(messageDTO, donorController.cancelRequest("AuthorizationToken", mobileNumber));
+    }
+}

@@ -2,9 +2,11 @@ package com.example.DonorOperator.DTO;
 
 import java.time.LocalDateTime;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class ActivationRequestDTO {
     private String mobileNumber;
     private LocalDateTime activationTime;

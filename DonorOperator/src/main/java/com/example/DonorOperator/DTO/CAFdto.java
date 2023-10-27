@@ -1,8 +1,10 @@
 package com.example.DonorOperator.DTO;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class CAFdto {
     private String mobileNumber;
     private String upc;

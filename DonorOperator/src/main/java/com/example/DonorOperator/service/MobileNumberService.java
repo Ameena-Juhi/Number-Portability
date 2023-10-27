@@ -1,6 +1,7 @@
 package com.example.DonorOperator.service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,24 +40,29 @@ public class MobileNumberService {
             }
 
             if (!mobileNumber.isEmpty()) {
-                MobileNumber existingMobileNumber = mobileNumberRepository.findByMobileNumber(mobileNumber).get();
-                if (existingMobileNumber == null) {
+                Optional<MobileNumber> optionalMobileNumber = mobileNumberRepository.findByMobileNumber(mobileNumber);
+                if (!optionalMobileNumber.isPresent()) {
                     throw new ResourceNotFoundException("Resource Not Found Exception " + mobileNumber);
                 }
+                MobileNumber existingMobileNumber = optionalMobileNumber.get();
                 NumbersPorting portingNumber = numbersPortingRepository
                         .findByMobileNumberId(existingMobileNumber.getId());
                 if (portingNumber != null) {
                     Date upcGenDate = portingNumber.getRequestedUpcTime();
                     Date currentDate = new Date();
-                    long timeDifference = (currentDate.getTime() - upcGenDate.getTime()) / (60 * 1000);
-                    if (timeDifference >= 40) {
-                        String upc = generateUniquePortingCode();
-                        portingNumber.setUpc(upc);
-                        portingNumber.setRequestedUpcTime(new Date());
-                        numbersPortingRepository.save(portingNumber);
-                        msg.setMessage(upc);
+                    if (upcGenDate != null) {
+                        long timeDifference = (currentDate.getTime() - upcGenDate.getTime()) / (60 * 1000);
+                        if (timeDifference >= 40) {
+                            String upc = generateUniquePortingCode();
+                            portingNumber.setUpc(upc);
+                            portingNumber.setRequestedUpcTime(new Date());
+                            numbersPortingRepository.save(portingNumber);
+                            msg.setMessage(upc);
+                        } else {
+                            msg.setMessage("Already generated UPC for this number!");
+                        }
                     } else {
-                        msg.setMessage("Already generated UPC for this number!");
+                        msg.setMessage("UpcGenDate is null!");
                     }
                 } else {
                     createNewPorting(existingMobileNumber, msg);
@@ -76,7 +82,7 @@ public class MobileNumberService {
         return String.format("%08d", randomNumber);
     }
 
-    private void createNewPorting(MobileNumber existingMobileNumber, MessageDTO msg) {
+    public void createNewPorting(MobileNumber existingMobileNumber, MessageDTO msg) {
         NumbersPorting numsPorting = new NumbersPorting();
         numsPorting.setMobileNumber(existingMobileNumber);
         String uniquePortingCode = generateUniquePortingCode();

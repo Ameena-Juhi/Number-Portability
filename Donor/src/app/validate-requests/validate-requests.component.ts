@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CafDTO } from '../cafDTO'; // Check the case sensitivity of the file name
+import { CafDTO } from '../CafDTO';// Check the case sensitivity of the file name
 import { PortingService } from '../porting.service';
 import { MsgDTO } from '../MsgDTO';
 

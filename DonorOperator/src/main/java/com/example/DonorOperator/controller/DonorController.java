@@ -17,7 +17,6 @@ import com.example.DonorOperator.DTO.CAFtoken;
 import com.example.DonorOperator.DTO.MessageDTO;
 import com.example.DonorOperator.DTO.SubDetailsDTO;
 import com.example.DonorOperator.DTO.ValidationClearanceDTO;
-import com.example.DonorOperator.DTO.ValidationClearancetoken;
 import com.example.DonorOperator.FeignClient.ClearanceClient;
 import com.example.DonorOperator.entity.DeactivationRequest;
 import com.example.DonorOperator.entity.ForwardedRequests;

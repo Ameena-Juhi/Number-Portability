@@ -1,11 +1,12 @@
 package com.example.DonorOperator.DTO;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class SubDetailsDTO {
   private String name;
   private String address;
-  private String mobileNumber;  
+  private String mobileNumber;
 }
-

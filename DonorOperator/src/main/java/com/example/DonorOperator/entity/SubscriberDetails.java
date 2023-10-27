@@ -9,9 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class SubscriberDetails {
 
@@ -34,6 +36,5 @@ public class SubscriberDetails {
     private String ICCID;
     private boolean billing_clearance;
     private Date portedInDate;
-    
-    
+
 }

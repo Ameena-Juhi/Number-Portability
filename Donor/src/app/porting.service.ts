@@ -5,7 +5,7 @@ import { RequestDTO } from './RequestDTO';
 import { MsgDTO } from './MsgDTO';
 import { SubDetailsDto } from './SubDetailsDto';
 import { RequestDTOLocale } from './RequestDTOLocale';
-import { CafDTO } from './cafDTO';
+import { CafDTO } from './CafDTO';
 
 @Injectable({
   providedIn: 'root'

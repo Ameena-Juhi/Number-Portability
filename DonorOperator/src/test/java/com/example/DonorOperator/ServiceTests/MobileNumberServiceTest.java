@@ -1,66 +1,82 @@
-// package com.example.DonorOperator.ServiceTests;
+package com.example.DonorOperator.ServiceTests;
 
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.junit.jupiter.api.Assertions.assertNotNull;
-// import static org.junit.jupiter.api.Assertions.assertNull;
-// import static org.junit.jupiter.api.Assertions.assertTrue;
-// import static org.mockito.ArgumentMatchers.any;
-// import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-// import java.util.Date;
-// import java.util.Optional;
-// import java.util.regex.Pattern;
+import java.util.Date;
+import java.util.Optional;
 
-// import com.example.DonorOperator.DTO.MessageDTO;
-// import com.example.DonorOperator.entity.MobileNumber;
-// import com.example.DonorOperator.repository.MobileNumberRepository;
-// import com.example.DonorOperator.repository.NumbersPortingRepository;
-// import com.example.DonorOperator.service.MobileNumberService;
-// import com.example.DonorOperator.exception.ResourceNotFoundException;
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.mockito.InjectMocks;
-// import org.mockito.Mock;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.boot.test.context.SpringBootTest;
-// import org.springframework.test.context.ActiveProfiles;
+import com.example.DonorOperator.DTO.MessageDTO;
+import com.example.DonorOperator.entity.MobileNumber;
+import com.example.DonorOperator.entity.NumbersPorting;
+import com.example.DonorOperator.repository.MobileNumberRepository;
+import com.example.DonorOperator.repository.NumbersPortingRepository;
+import com.example.DonorOperator.service.MobileNumberService;
 
-// @SpringBootTest
-// @ActiveProfiles("test")
-// public class MobileNumberServiceTest {
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.AdditionalAnswers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-//     @InjectMocks
-//     private MobileNumberService mobileNumberService;
+@ExtendWith(MockitoExtension.class)
+public class MobileNumberServiceTest {
 
-//     @Mock
-//     private MobileNumberRepository mobileNumberRepository;
+    @InjectMocks
+    private MobileNumberService mobileNumberService;
 
-//     @Mock
-//     private NumbersPortingRepository numbersPortingRepository;
+    @Mock
+    private MobileNumberRepository mobileNumberRepository;
 
-//     @BeforeEach
-//     public void setup() {
-//     }
+    @Mock
+    private NumbersPortingRepository numbersPortingRepository;
 
-//     @Test
-//     public void testRetrieveMobileNumber() throws ResourceNotFoundException {
-//         // Create a sample SMS
-//         MessageDTO sms = sms.setMessage("PORT 9014315818");
+    @Test
+    void testRetrieveMobileNumber() throws Exception {
+        MessageDTO SMS = new MessageDTO();
+        SMS.setMessage("port 1234567890");
+        MobileNumber mobileNumber = new MobileNumber();
+        mobileNumber.setId(1L);
+        mobileNumber.setMobileNumber("1234567890");
+        Optional<MobileNumber> optionalMobileNumber = Optional.of(mobileNumber);
+        when(mobileNumberRepository.findByMobileNumber("1234567890")).thenReturn(optionalMobileNumber);
 
-//         // Create a sample MobileNumber entity
+        NumbersPorting numbersPorting = new NumbersPorting();
+        numbersPorting.setId(1L);
+        numbersPorting.setMobileNumber(mobileNumber);
+        numbersPorting.setRequestedUpcTime(new Date());
+        when(numbersPortingRepository.findByMobileNumberId(1L)).thenReturn(numbersPorting);
 
-//         MobileNumber mobileNumber = new MobileNumber();
-//         mobileNumber.setId((long) 1);
-//         mobileNumber.setMobileNumber("9014315818");
+        MessageDTO result = mobileNumberService.retrieveMobileNumber(SMS);
+        assertEquals("Already generated UPC for this number!", result.getMessage());
+    }
 
-//         // Define expected behavior of mocked repositories
-//         when(mobileNumberRepository.findByMobileNumber(any())).thenReturn(mobileNumber);
-//         when(numbersPortingRepository.findByMobileNumberId(mobileNumber.getId())).thenReturn(null);
+    @Test
+    public void testValidateSMSValidFormat() {
+        boolean result = mobileNumberService.validateSMS("port 1234567890");
+        assertEquals(true, result);
+    }
 
-//         // Call the service method
-//         String upc = mobileNumberService.retrieveMobileNumber(sms);
-//         assertNotNull(upc);
-//         assertTrue(Pattern.matches("^\\d{8}$", upc));
-//     }
+    @Test
+    public void testValidateSMSInvalidFormat() {
+        boolean result = mobileNumberService.validateSMS("random message");
+        assertEquals(false, result);
+    }
 
-// }
+    @Test
+    void testCreateNewPorting() throws Exception {
+        MobileNumber existingMobileNumber = new MobileNumber();
+        existingMobileNumber.setId(1L);
+        existingMobileNumber.setMobileNumber("1234567890");
+
+        when(numbersPortingRepository.save(any())).then(AdditionalAnswers.returnsFirstArg());
+
+        MessageDTO msg = new MessageDTO();
+        mobileNumberService.createNewPorting(existingMobileNumber, msg);
+
+        assertEquals(8, msg.getMessage().length()); // assuming the UPC is of length 8
+    }
+
+}

@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.example.DonorOperator.entity.ForwardedRequests;
-import com.google.common.base.Optional;
 
 @Repository
 public interface ForwardedRequestsRepo extends JpaRepository<ForwardedRequests, Long> {
