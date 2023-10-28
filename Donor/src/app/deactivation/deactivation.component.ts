@@ -18,6 +18,7 @@ export class DeactivationComponent implements OnInit {
   };
   isButtonDisabled: boolean = false;
   response: MsgDTO = { message : '' };
+  datePipe: any;
 
   constructor(private portingService: PortingService) {}
 
@@ -25,6 +26,7 @@ export class DeactivationComponent implements OnInit {
     this.portingService.getAllDeactReqs().subscribe(
       (res: RequestDTOLocale[]) => {
         this.requests = res; 
+        this.requests.reverse();
         if (res && res.length > 0) {
           this.request = res[0]; 
         }

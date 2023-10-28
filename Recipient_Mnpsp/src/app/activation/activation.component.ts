@@ -23,7 +23,8 @@ export class ActivationComponent {
   ngOnInit(): void {
     this.portinService.getAllActivationReq().subscribe(
       (res: RequestDTO[]) => {
-        this.requests = res; // assigning the response to forms
+        this.requests = res; 
+        this.requests.reverse();// assigning the response to forms
         if (res && res.length > 0) {
           this.request = res[0];
         }

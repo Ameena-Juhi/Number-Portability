@@ -2,6 +2,7 @@ package com.example.RecipientOperator.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,14 @@ public class CustomerAcquisitionFormService {
     }
 
     public boolean getIdentityClearance(MessageDTO mobNum) {
-        CustomerAcquisitionForm form = CAFRepository.findByMobileNumber(mobNum.getMessage()).get();
-        return form.isIdentityClearance();
+        Optional<CustomerAcquisitionForm> formOptional = CAFRepository.findByMobileNumber(mobNum.getMessage());
+        if (formOptional.isPresent()) {
+            CustomerAcquisitionForm form = formOptional.get();
+            return form.isIdentityClearance();
+        } else {
+            return false;
+        }
+
     }
 
 }

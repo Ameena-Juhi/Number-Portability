@@ -30,11 +30,36 @@ export class MNPSPComponent {
     private donorService : DonorService){}
 
   ngOnInit(): void {
-    this.portinService.getAllPortingRquests().subscribe(res => this.caf = res);
-    this.getIdentity(this.form);
+    // this.portinService.getAllPortingRquests().subscribe(res => {
+    //   this.caf = res;
+    //   this.caf.reverse(); // Reverse the array to have the latest request on top
+    // });
+    // this.getIdentity(this.form);
+    this.portinService.getAllPortingRquests().subscribe(res => {
+      this.caf = res;
+      this.caf.reverse(); // Reverse the array to have the latest request on top
+      this.caf.forEach(form => {
+        this.getIdentity(form);
+      });
+    });
   }
   
   getValidation(form: CAF): void {
+      // this.inputNumber.message = form.mobileNumber;
+      // this.portinService.getIdentityClearance(this.inputNumber).subscribe(
+      //   (res: boolean) => {
+      //     if (!res) {
+      //       form.identityResponse = 'Unsuccessful due to name/address mismatch!';
+      //       console.log(form.identityResponse);
+      //     } else {
+      //       form.identityResponse = '';
+      //     }
+      //   },
+      //   (error) => {
+      //     console.error('Error:', error);
+      //   }
+      // );
+    
     this.mnpspService.Validate(form).subscribe(
       (response : messageDTO) => {
         this.response = response;
@@ -48,22 +73,53 @@ export class MNPSPComponent {
 
   identityResponse: string = '';
 
+
   getIdentity(form: CAF) {
-    this.inputNumber.message = form.mobileNumber;
-    this.portinService.getIdentityClearance(this.inputNumber).subscribe(
+    const inputNumber: messageDTO = { message: form.mobileNumber };
+    this.portinService.getIdentityClearance(inputNumber).subscribe(
       (res: boolean) => {
-        if (!res) {
-          this.identityResponse = 'Unsuccessful due to name/address mismatch!';
-          console.log(this.identityResponse);
-        } else {
-          this.identityResponse = '';
-        }
+        form.clearance = res 
+        // ? 'Successful' : 'Unsuccessful due to name/address mismatch!';
       },
       (error) => {
         console.error('Error:', error);
+        // form.clearance = 'Error occurred while fetching identity clearance';
       }
     );
   }
+  // getIdentity(form: CAF) {
+  //   this.inputNumber.message = form.mobileNumber;
+  //   this.portinService.getIdentityClearance(this.inputNumber).subscribe(
+  //     (res: boolean) => {
+  //       if (!res) {
+  //         form.clearance = 'Unsuccessful due to name/address mismatch!';
+  //         console.log(form.clearance);
+  //       } else {
+  //         form.clearance = '';
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Error:', error);
+  //     }
+  //   );
+  // }
+
+  // getIdentity(form: CAF) {
+  //   this.inputNumber.message = form.mobileNumber;
+  //   this.portinService.getIdentityClearance(this.inputNumber).subscribe(
+  //     (res: boolean) => {
+  //       if (!res) {
+  //         this.identityResponse = 'Unsuccessful due to name/address mismatch!';
+  //         console.log(this.identityResponse);
+  //       } else {
+  //         this.identityResponse = '';
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error('Error:', error);
+  //     }
+  //   );
+  // }
   
 
   cancelTheRequest(form: CAF) {

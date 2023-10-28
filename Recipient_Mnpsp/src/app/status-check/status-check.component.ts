@@ -20,6 +20,7 @@ export class StatusCheckComponent implements OnInit {
     this.mnpspService.getAllStatus().subscribe(
       (res: status[]) => {
         this.statusDtos = res;
+        this.statusDtos.reverse();
       },
       (error) => {
         console.error('Error:', error);

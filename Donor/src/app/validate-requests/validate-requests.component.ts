@@ -26,6 +26,7 @@ export class ValidateRequestsComponent implements OnInit {
     this.portingService.getAllRequests().subscribe(
       (res: CafDTO[]) => {
         this.forms = res; 
+        this.forms.reverse();
         if (res && res.length > 0) {
           this.form = res[0]; 
         }

@@ -45,7 +45,7 @@ public class DeactivationService {
         MessageDTO messageDTO = new MessageDTO();
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDateTime scheduledTime = deactivationRequest.getActivationTime();
-
+        System.out.println("this is getting stored" + deactivationRequest.getActivationTime());
         if (currentDateTime.isAfter(scheduledTime)) {
             MobileNumber mobileEntry = mobileNumberRepository.findByMobileNumber(deactivationRequest.getMobileNumber())
                     .get();

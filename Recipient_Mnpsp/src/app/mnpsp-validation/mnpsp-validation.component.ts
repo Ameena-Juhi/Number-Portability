@@ -43,7 +43,8 @@ token:string| null = localStorage.getItem('token');
   ngOnInit(): void {
     this.portinService.getAllPortingRquests().subscribe(
       (res: CAF[]) => {
-        this.forms = res; // assigning the response to forms
+        this.forms = res;
+        this.forms.reverse(); // assigning the response to forms
         if (res && res.length > 0) {
           this.form = res[0];
         }
@@ -82,6 +83,7 @@ token:string| null = localStorage.getItem('token');
   }
 
   schedulePortingTime(form: CAF) {
+
     this.inputMobNum.message = form.mobileNumber;
     this.mnpspService.scheduleTime(this.inputMobNum).subscribe(
       (res: Date) => {
@@ -92,7 +94,8 @@ token:string| null = localStorage.getItem('token');
         this.mnpspService.getDonorClearance(this.clearance).subscribe();
         this.portinService.saveActivationReq(this.request).subscribe();
         this.mnpspService.getRecipientClearance(this.clearance).subscribe();
-        this.mnpspService.updateNumDB(this.inputMobNum).subscribe();
+        // this.mnpspService.updateNumDB(this.inputMobNum).subscribe();
+        
         
       },
       (error) => {

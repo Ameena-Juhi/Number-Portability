@@ -6,6 +6,7 @@
       <th>Address</th>
       <th>Mobile Number</th>
       <th>Unique Porting Code (UPC)</th>
+      <th>Request</th>
       <th>Action</th>
     </tr>
   </thead>
@@ -15,6 +16,7 @@
       <td>{{ form.address }}</td>
       <td>{{ form.mobileNumber }}</td>
       <td>{{ form.upc }}</td>
+      <td>{{ form.clearance }}</td>
       <td>
         <button
           class="action-button forward-button"
@@ -23,7 +25,6 @@
         >
           Forward to MNPSP
         </button>
-        <p>{{ identityResponse }}</p>
         <button
           class="action-button cancel-button"
           type="button"

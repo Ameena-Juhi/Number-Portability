@@ -15,6 +15,7 @@ import com.example.MNPSP.DTO.PortingStatusDTO;
 import com.example.MNPSP.DTO.ValidationClearanceDTO;
 import com.example.MNPSP.entity.FinalClearance;
 import com.example.MNPSP.entity.NumberPortabilityDB;
+import com.example.MNPSP.feignClient.ROActivationClient;
 import com.example.MNPSP.repository.FinalClearanceRepo;
 import com.example.MNPSP.repository.NumberPortabilityDBRepository;
 
@@ -117,6 +118,7 @@ public class NumberPortabilityDBService {
             LocalDateTime currentTime = LocalDateTime.now();
 
             LocalDateTime scheduledTime = currentTime.plusMinutes(1);
+            System.out.println(scheduledTime);
 
             return scheduledTime;
         }

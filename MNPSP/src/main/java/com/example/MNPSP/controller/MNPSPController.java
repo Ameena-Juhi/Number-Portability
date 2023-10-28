@@ -63,6 +63,7 @@ public class MNPSPController {
     public boolean storeIdentityClearance(
             @RequestHeader(value = "Authorization", required = true) String authorizationHeader,
             @RequestBody ValidationClearanceDTO IdentityClearance) {
+        System.out.println("identity");
 
         boolean clearance = numPortDBService.storeIdentityClearance(IdentityClearance);
         ValidationClearanceDTO clearancedto = new ValidationClearanceDTO();

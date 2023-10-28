@@ -67,12 +67,12 @@ public class Port_InController {
     @PostMapping("/checkidentity")
     public boolean storeIdentityClearance(@RequestBody ValidationClearancetoken IdentityClearanceDTO) {
         System.out.println("checkidentity");
-        return this.cafClientService.storeIdentityClearance(IdentityClearanceDTO);
+        return cafClientService.storeIdentityClearance(IdentityClearanceDTO);
     }
 
     @PostMapping("/getIdentity")
     public boolean getIdentityClearance(@RequestBody MessageDTO mobNum) {
-        return this.CAFService.getIdentityClearance(mobNum);
+        return CAFService.getIdentityClearance(mobNum);
     }
 
     @PostMapping("/activation")

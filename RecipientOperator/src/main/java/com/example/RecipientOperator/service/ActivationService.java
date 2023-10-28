@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,6 +74,9 @@ public class ActivationService {
                     subscriberDetails.setPortedInDate(new Date());
                     subscriberDetails.setName(customerDetails.getName());
                     subscriberDetails.setAddress(customerDetails.getAddress());
+                    subscriberDetails.setICCID(generateICCID());
+                    subscriberDetails.setIMSI(generateIMSI());
+                    subscriberDetails.setIMEI(generateIMSI());
                     subDetailsRepository.save(subscriberDetails);
                     ValidationClearanceDTO clearanceDto = new ValidationClearanceDTO();
                     clearanceDto.setMobileNumber(activationRequest.getMobileNumber());
@@ -88,6 +92,28 @@ public class ActivationService {
         }
 
         return messageDTO;
+    }
+
+    private String generateICCID() {
+        Random random = new Random();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < 20; i++) {
+            stringBuilder.append(random.nextInt(10));
+        }
+
+        return stringBuilder.toString();
+    }
+
+    private String generateIMSI() {
+        Random random = new Random();
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < 15; i++) {
+            stringBuilder.append(random.nextInt(10));
+        }
+
+        return stringBuilder.toString();
     }
 
 }
