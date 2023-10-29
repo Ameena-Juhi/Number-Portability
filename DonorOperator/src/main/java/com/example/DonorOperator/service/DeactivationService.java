@@ -59,7 +59,7 @@ public class DeactivationService {
             mobileNumberRepository.delete(mobileEntry);
 
             this.clearanceClient.setDeactivationClearance(authorizationHeader, clearance);
-            messageDTO.setMessage("Mobile number deleted successfully."); // Set the appropriate success message
+            messageDTO.setMessage("Successfully unsubscribed."); // Set the appropriate success message
         } else {
             messageDTO.setMessage("Deactivation Time not yet reached!/Already deactivated your account");
         }

@@ -49,7 +49,7 @@ public class ForwardedReqServiceTest {
         mobileNumber.setId(1L);
         when(mobileNumberRepository.findByMobileNumber("1234567890")).thenReturn(Optional.of(mobileNumber));
         when(subscriberDetailsRepository.findbymobilenum_id(1L)).thenReturn(createMockSubscriberDetails(1L, "John Doe",
-                "123 Street", "1234567890", "IMSI123", "IMEI123", "ICCID123", true));
+                "123 Street", "1234567890", "IMSI123", "IMEI123", true));
 
         boolean result = forwardedReqService.saveCAFDTO(form);
 
@@ -67,7 +67,7 @@ public class ForwardedReqServiceTest {
         mobileNumber.setId(1L);
         when(mobileNumberRepository.findByMobileNumber("1234567890")).thenReturn(Optional.of(mobileNumber));
         when(subscriberDetailsRepository.findbymobilenum_id(1L)).thenReturn(createMockSubscriberDetails(1L, "John Doe",
-                "1234 Street", "1234567890", "IMSI123", "IMEI123", "ICCID123", true));
+                "1234 Street", "1234567890", "IMSI123", "IMEI123", true));
 
         boolean result = forwardedReqService.saveCAFDTO(form);
 
@@ -94,7 +94,7 @@ public class ForwardedReqServiceTest {
         mobileNumber.setId(1L);
         when(mobileNumberRepository.findByMobileNumber("1234567890")).thenReturn(Optional.of(mobileNumber));
         when(subscriberDetailsRepository.findbymobilenum_id(1L)).thenReturn(createMockSubscriberDetails(1L, "John Doe",
-                "123 Street", "1234567890", "IMSI123", "IMEI123", "ICCID123", true));
+                "123 Street", "IMSI123", "IMEI123", "ICCID123", true));
 
         boolean result = forwardedReqService.checkIdentity(form);
 
@@ -111,20 +111,19 @@ public class ForwardedReqServiceTest {
         mobileNumber.setId(1L);
         when(mobileNumberRepository.findByMobileNumber("1234567890")).thenReturn(Optional.of(mobileNumber));
         when(subscriberDetailsRepository.findbymobilenum_id(1L)).thenReturn(createMockSubscriberDetails(1L, "John Doe",
-                "123 Street", "1234567890", "IMSI123", "IMEI123", "ICCID123", true));
+                "123 Street", "IMSI123", "IMEI123", "ICCID123", true));
 
         boolean result = forwardedReqService.checkIdentity(form);
 
         assertEquals(false, result);
     }
 
-    private SubscriberDetails createMockSubscriberDetails(Long id, String name, String address, String MSISDN,
+    private SubscriberDetails createMockSubscriberDetails(Long id, String name, String address,
             String IMSI, String IMEI, String ICCID, boolean billing_clearance) {
         SubscriberDetails subscriberDetails = new SubscriberDetails();
         subscriberDetails.setId(id);
         subscriberDetails.setName(name);
         subscriberDetails.setAddress(address);
-        subscriberDetails.setMSISDN(MSISDN);
         subscriberDetails.setIMSI(IMSI);
         subscriberDetails.setIMEI(IMEI);
         subscriberDetails.setICCID(ICCID);

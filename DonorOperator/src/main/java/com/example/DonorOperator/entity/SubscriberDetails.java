@@ -30,7 +30,6 @@ public class SubscriberDetails {
     private MobileNumber mobileNumber;
 
     @Column
-    private String MSISDN;
     private String IMSI;
     private String IMEI;
     private String ICCID;

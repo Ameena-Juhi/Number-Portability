@@ -82,7 +82,7 @@ public class ActivationService {
                     clearanceDto.setMobileNumber(activationRequest.getMobileNumber());
                     clearanceDto.setValidationClearance(true);
                     this.cafClient.setActivationClearance(authorizationHeader, clearanceDto);
-                    messageDTO.setMessage("Mobile number added successfully.");
+                    messageDTO.setMessage("Successfully subscribed.");
                 } else {
                     messageDTO.setMessage("Customer details not found!");
                 }

@@ -57,7 +57,6 @@ public class DeactivationServiceTest {
 
         SubscriberDetails subscriberDetails = new SubscriberDetails();
         subscriberDetails.setId(1L);
-        subscriberDetails.setMSISDN("1234567890");
         subscriberDetails.setIMSI("IMSI123");
         subscriberDetails.setIMEI("IMEI123");
         when(subscriberDetailsRepository.findbymobilenum_id(1L)).thenReturn(subscriberDetails);
@@ -68,7 +67,7 @@ public class DeactivationServiceTest {
         when(numbersPortingRepository.findByMobileNumberId(1L)).thenReturn(numbersPortingEntry);
 
         String authorizationHeader = "Bearer YourTokenHere";
-        assertEquals("Mobile number deleted successfully.",
+        assertEquals("Successfully unsubscribed.",
                 deactivationService.acceptDeactivation(authorizationHeader, deactivationRequest).getMessage());
     }
 

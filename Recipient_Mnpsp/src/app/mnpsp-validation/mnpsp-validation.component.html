@@ -5,7 +5,10 @@
       <div class="request-details">
         <p><strong>Mobile Number:</strong> {{ item.mobileNumber }}</p>
         <p><strong>UPC:</strong> {{ item.upc }}</p>
-        <p><strong>Donor Operator Validation:</strong> {{ item.clearance }}</p>
+        <p>
+          <strong>Donor Operator Validation:</strong>
+          {{ item.clearance ? "Successful" : "Unsuccessful" }}
+        </p>
       </div>
       <div class="button-container">
         <button (click)="getClearance(item)" class="forward-button">

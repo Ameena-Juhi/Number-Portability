@@ -25,6 +25,9 @@ export class LoginComponent {
           console.log("token - "+this.response);
           this.response = 'Login successful';
         },
+        (error) => {
+          this.response = 'Permission denied';
+        }
       );
   }
 
